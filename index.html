@@ -4,10 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        button {
+            font-size: 16px;
+            padding: 10px 20px;
+            margin: 10px;
+        }
+    </style>
 </head>
 <body>
-    <button>
-        tikla
-    </button>
+    <button id="incrementButton">Tikla</button>
+    <p id="variableValue">Değer: 0</p>
+
+    <script>
+        // Başlangıçta değişkeni tanımlıyoruz
+        let variable = 0;
+
+        // Buton ve paragrafa referans alıyoruz
+        const button = document.getElementById('incrementButton');
+        const variableValueParagraph = document.getElementById('variableValue');
+
+        // Butona tıklama olayı ekliyoruz
+        button.addEventListener('click', () => {
+            variable += 1; // Değişkeni 1 artırıyoruz
+            variableValueParagraph.textContent = `Değer: ${variable}`; // Güncellenmiş değeri paragrafa yazıyoruz
+        });
+    </script>
 </body>
 </html>
