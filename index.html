@@ -23,7 +23,7 @@
         const userInfoDiv = document.getElementById('user-info');
         async function fetchUserPoints(userId) {
             try {
-                const response = await fetch(`https://main--mellifluous-axolotl-46dfb9.netlify.app/points/${userId}`);
+                const response = await fetch(`http://localhost:8000/clicker/points/${userId}`);
                 const data = await response.json();
                 if (data.error) {
                     variableValueParagraph.textContent = 'Değer: Error fetching pppoints';
