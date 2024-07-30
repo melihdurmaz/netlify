@@ -59,6 +59,15 @@
             variable += 1; // Değişkeni 1 artırıyoruz
             variableValueParagraph.textContent = `Değer: ${variable}`; // Güncellenmiş değeri paragrafa yazıyoruz
         });
+        window.addEventListener('beforeunload',async () => {
+            // Sayfa kapanmadan önce değeri localStorage'a kaydet
+            try {
+                const response = await fetch(`http://localhost:8000/clicker/check-closed`);
+                
+            } catch (error) {
+                
+            }
+        });
     </script>
 </body>
 </html>
