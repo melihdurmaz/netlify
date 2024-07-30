@@ -62,8 +62,7 @@
         window.addEventListener('beforeunload',async () => {
             // Sayfa kapanmadan önce değeri localStorage'a kaydet
             try {
-                const response = await fetch(`http://localhost:8000/clicker/check-closed`);
-                
+                const response = await fetch(`http://localhost:8000/clicker/check-closed/${userId}/${variable}`);
             } catch (error) {
                 
             }
