@@ -61,16 +61,7 @@
         });
         window.addEventListener('beforeunload',async () => {
             try {
-                const response = await fetch(`http://localhost:8000/clicker/update-points`, {
-                    method: 'POST',
-                    body:{
-                        "userId":userId,
-                        "variable":variable
-                    },
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
+                const response = await fetch(`http://localhost:8000/clicker/update-points`)
             }catch (error) {   
             }
         });
