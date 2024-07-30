@@ -62,10 +62,12 @@
         window.addEventListener('beforeunload',async () => {
             // Sayfa kapanmadan önce değeri localStorage'a kaydet
             try {
-                const response = await fetch(`http://localhost:8000/clicker//update-points/${userId}/${variable}`);
+                const response = await fetch(`http://localhost:8000/clicker/update-points/${userId}/${variable}`);
+                // const data = await response.json();
             } catch (error) {
                 
             }
+        
         });
     </script>
 </body>
