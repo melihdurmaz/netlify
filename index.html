@@ -15,7 +15,21 @@
 <body>
     <button id="incrementButton">Tikla</button>
     <p id="variableValue">Değer: 0</p>
-
+    <div id="user-info"></div>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        Telegram.WebApp.ready();
+        const user = Telegram.WebApp.initDataUnsafe.user;
+        const userInfoDiv = document.getElementById('user-info');
+        if (user) {
+            userInfoDiv.innerHTML = `<p>User ID: ${user.id}</p>
+                                     <p>First Name: ${user.first_name}</p>
+                                     <p>Last Name: ${user.last_name}</p>
+                                     <p>Username: ${user.username}</p>`;
+        } else {
+            userInfoDiv.innerHTML = '<p>No user information available.</p>';
+        }
+    </script>
     <script>
         // Başlangıçta değişkeni tanımlıyoruz
         let variable = 0;
