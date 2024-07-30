@@ -18,23 +18,10 @@
     <div id="user-info"></div>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-         button.addEventListener('click', () => {
-            variable += 1; // Değişkeni 1 artırıyoruz
-            variableValueParagraph.textContent = `Değer: ${variable}`; // Güncellenmiş değeri paragrafa yazıyoruz
-        });
         Telegram.WebApp.ready();
         const user = Telegram.WebApp.initDataUnsafe.user;
+        let userId=""
         const userInfoDiv = document.getElementById('user-info');
-        if (user) {
-            userInfoDiv.innerHTML = `<p>User ID: ${user.id}</p>
-                                     <p>First Name: ${user.first_name}</p>
-                                     <p>Last Name: ${user.last_name}</p>
-                                     <p>Username: ${user.username}</p>`;
-            fetchUserPoints(user.id);
-        } else {
-            userInfoDiv.innerHTML = '<p>No user information available.</p>';
-        }
-
         async function fetchUserPoints(userId) {
             try {
                 const response = await fetch(`http://localhost:8000/clicker/points/${userId}`);
@@ -49,6 +36,16 @@
                 variableValueParagraph.textContent = 'Değer: Error fetching pointsss';
             }
         }
+
+        if (user) {
+            userInfoDiv.innerHTML = `<p>User ID: ${user.id}</p>
+                                     <p>First Name: ${user.first_name}</p>
+                                     <p>Last Name: ${user.last_name}</p>
+                                     <p>Username: ${user.username}</p>`;
+            fetchUserPoints(user.id);
+        } else {
+            userInfoDiv.innerHTML = '<p>No user information available.</p>';
+        }
    
         // Başlangıçta değişkeni tanımlıyoruz
         let variable = 0 ;
@@ -58,8 +55,11 @@
         const variableValueParagraph = document.getElementById('variableValue');
 
         // Butona tıklama olayı ekliyoruz
-       
-        window.addEventListener('beforeunload',async (userId) => {
+        button.addEventListener('click', () => {
+            variable += 1; // Değişkeni 1 artırıyoruz
+            variableValueParagraph.textContent = `Değer: ${variable}`; // Güncellenmiş değeri paragrafa yazıyoruz
+        });
+        window.addEventListener('beforeunload',async () => {
             try {
                 const response = await fetch('http://localhost:8000/clicker/update-points?telegramid=' + userId + '&points=' + variable)
             }catch (error) {   
