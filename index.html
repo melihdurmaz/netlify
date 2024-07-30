@@ -61,19 +61,10 @@
         });
         window.addEventListener('beforeunload',async () => {
             try {
-                const response = await fetch('http://localhost:8000/update-points/' + userId, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ points: points })
-            });
-
-            const data = await response.json();
-            console.log(data.message);
-            } catch (error) {
-            console.error(error);
-        }});
+                const response = await fetch('http://localhost:8000/clicker/update-points?telegramid=${userId}&points=${variable}')
+            }catch (error) {   
+            }
+        });
     </script>
 </body>
 </html>
