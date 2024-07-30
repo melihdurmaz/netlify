@@ -21,11 +21,27 @@
         Telegram.WebApp.ready();
         const user = Telegram.WebApp.initDataUnsafe.user;
         const userInfoDiv = document.getElementById('user-info');
+        async function fetchUserPoints(userId) {
+            try {
+                const response = await fetch(`http://your-api-url.com/points/${userId}`);
+                const data = await response.json();
+                if (data.error) {
+                    variableValueParagraph.textContent = 'Değer: Error fetching points';
+                } else {
+                    variable = data.points;
+                    variableValueParagraph.textContent = `Değer: ${variable}`;
+                }
+            } catch (error) {
+                variableValueParagraph.textContent = 'Değer: Error fetching points';
+            }
+        }
+
         if (user) {
             userInfoDiv.innerHTML = `<p>User ID: ${user.id}</p>
                                      <p>First Name: ${user.first_name}</p>
                                      <p>Last Name: ${user.last_name}</p>
                                      <p>Username: ${user.username}</p>`;
+            fetchUserPoints(user.id);
         } else {
             userInfoDiv.innerHTML = '<p>No user information available.</p>';
         }
