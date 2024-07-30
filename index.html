@@ -20,6 +20,7 @@
     <script>
         Telegram.WebApp.ready();
         const user = Telegram.WebApp.initDataUnsafe.user;
+        let userId="";
         const userInfoDiv = document.getElementById('user-info');
         async function fetchUserPoints(userId) {
             try {
@@ -45,10 +46,9 @@
         } else {
             userInfoDiv.innerHTML = '<p>No user information available.</p>';
         }
-    </script>
-    <script>
+   
         // Başlangıçta değişkeni tanımlıyoruz
-        let variable = 0;
+        let variable = 0 ;
 
         // Buton ve paragrafa referans alıyoruz
         const button = document.getElementById('incrementButton');
@@ -61,7 +61,7 @@
         });
         window.addEventListener('beforeunload',async () => {
             try {
-                const response = await fetch('http://localhost:8000/clicker/update-points?telegramid=${userId}&points=${variable}')
+                const response = await fetch('http://localhost:8000/clicker/update-points?telegramid=' + userId + '&points=' + variable)
             }catch (error) {   
             }
         });
