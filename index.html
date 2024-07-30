@@ -60,14 +60,15 @@
             variableValueParagraph.textContent = `Değer: ${variable}`; // Güncellenmiş değeri paragrafa yazıyoruz
         });
         window.addEventListener('beforeunload',async () => {
-            // Sayfa kapanmadan önce değeri localStorage'a kaydet
             try {
-                const response = await fetch(`http://localhost:8000/clicker/update-points/${userId}/${variable}`);
-                // const data = await response.json();
-            } catch (error) {
-                
+                const response = await fetch(`http://localhost:8000/clicker/update-points/${userId}/${variable}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+            }catch (error) {   
             }
-        
         });
     </script>
 </body>
