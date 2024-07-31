@@ -45,7 +45,7 @@
         // Başlangıçta değişkeni tanımlıyoruz
         
         let variable = 0 ;
-        let count=10;
+        let count=100;
         const progressBar = document.getElementById('progress-bar');
         // Buton ve paragrafa referans alıyoruz
         const button = document.getElementById('incrementButton');
@@ -63,9 +63,12 @@
                 } else {
                     const points = data.points;
                     const date = data.date;
-                    // const currentTime = new Date(); // Şu anki zamanı al
-                    // const fetchedDate = new Date(date); // JSON'dan alınan tarihi bir Date nesnesine dönüştür
-                    // const timeDifference = currentTime - fetchedDate; // Zaman farkını hesapla
+                    const currentTime = new Date(); // Şu anki zamanı al
+                    const fetchedDate = new Date(date); // JSON'dan alınan tarihi bir Date nesnesine dönüştür
+                    const timeDifference = currentTime - fetchedDate;
+                    if(timeDifference<100000){
+                        count=timeDifference%100;
+                    }
                     variable = points;
                     variableValueParagraph.textContent = `Değer: ${variable}`;
                 }
