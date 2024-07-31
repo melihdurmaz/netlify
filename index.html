@@ -34,6 +34,7 @@
     <div id="progress-container">
         <div id="progress-bar"></div>
     </div>
+    <button id="saveButton">Değerini kaydet</button>
 
 
     <script src="script.js"></script>
@@ -49,6 +50,7 @@
         const progressBar = document.getElementById('progress-bar');
         // Buton ve paragrafa referans alıyoruz
         const button = document.getElementById('incrementButton');
+        const saveButton = document.getElementById('saveButton');
         const variableValueParagraph = document.getElementById('variableValue');
  
         Telegram.WebApp.ready();
@@ -114,12 +116,18 @@
                 variableValueParagraph.textContent = `Değer: ${variable}`; // Güncellenmiş değeri paragrafa yazıyoruz
             }
         });
+        saveButton.addEventListener('click', async () => {
+            try {
+                const response = await fetch('http://localhost:8000/clicker/update-points?telegramid=' + userId + '&points=' + variable)
+            }catch (error) {
+            }
+        })
+
         const userId = user.id;
 
         window.addEventListener('beforeunload',async () => {
             try {
-                DateTime=moment().utc().format('YYYY-MM-DD HH:mm:ss')
-                const response = await fetch('http://localhost:8000/clicker/update-points?telegramid=' + userId + '&points=' + variable + '&click_persecond=' + DateTime)
+                const response = await fetch('http://localhost:8000/clicker/update-points?telegramid=' + userId + '&points=' + variable)
             }catch (error) {
             }
         });
