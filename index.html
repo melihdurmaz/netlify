@@ -64,20 +64,17 @@
             try {
                 const response = await fetch(`http://localhost:8000/clicker/pointsAndClickPower/${userId}`);
                 const data = await response.json();
-               
+
                 if (data.error) {
-                    variableValueParagraph.textContent = 'Değer: Error fetching pppoints';
+                    variableValueParagraph.textContent = 'Değer: Error fetching points';
                 } else {
-                    parsed_data = json.loads(data)
-                    points = parsed_data['points']
-                    click_power = parsed_data['click_power']
-                    variable = points;
-                    clickPower=click_power;
-                    variableValueParagraph.textContent = `Değer: ${variable}`;
-                    clickPowerParagraph.textContent=`Click Power Gücü: ${clickPower}`
+                    const points = data.points;
+                    const clickPower = data.click_power;
+                    variableValueParagraph.textContent = `Değer: ${points}`;
+                    clickPowerParagraph.textContent = `Click Power Gücü: ${clickPower}`;
                 }
             } catch (error) {
-                variableValueParagraph.textContent = 'Değer: Error fetching pointsss';
+                variableValueParagraph.textContent = 'Değer: Error fetching points';
             }
         }
 
