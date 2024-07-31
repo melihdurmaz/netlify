@@ -61,9 +61,12 @@
                 if (result.error) {
                     variableValueParagraph.textContent = 'Değer: Error fetching pppoints';
                 } else {
-                    points = result.get("points");
-                    date = result.get("date");
-                    print(currentTime-date);
+                    const points = result.points;
+                    const date = result.date;
+                    const currentTime = new Date(); // Şu anki zamanı al
+                    const fetchedDate = new Date(date); // JSON'dan alınan tarihi bir Date nesnesine dönüştür
+                    const timeDifference = currentTime - fetchedDate; // Zaman farkını hesapla
+                    console.log(`Time difference: ${timeDifference} milliseconds`);
                     variable = points;
                     variableValueParagraph.textContent = `Değer: ${variable}`;
                 }
