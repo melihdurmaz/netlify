@@ -10,14 +10,44 @@
             padding: 10px 20px;
             margin: 10px;
         }
+        #progress-container {
+            width: 50%;
+            background-color: #e0e0e0;
+            border: 1px solid #000;
+            height: 30px;
+            margin-top: 20px;
+        }
+
+        #progress-bar {
+            width: 100%;
+            height: 100%;
+            background-color: #76c7c0;
+            transition: width 0.3s;
+        }
+
     </style>
 </head>
 <body>
     <button id="incrementButton">Tikla</button>
     <p id="variableValue">Değer: 0</p>
     <div id="user-info"></div>
+    <div id="progress-container">
+        <div id="progress-bar"></div>
+    </div>
+
+
+    <script src="script.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
+        // Başlangıçta değişkeni tanımlıyoruz
+        let count = 10;
+        let variable = 0 ;
+        
+        const progressBar = document.getElementById('progress-bar');
+        // Buton ve paragrafa referans alıyoruz
+        const button = document.getElementById('incrementButton');
+        const variableValueParagraph = document.getElementById('variableValue');
+
         Telegram.WebApp.ready();
         const user = Telegram.WebApp.initDataUnsafe.user;
         const userInfoDiv = document.getElementById('user-info');
@@ -45,24 +75,35 @@
         } else {
             userInfoDiv.innerHTML = '<p>No user information available.</p>';
         }
-   
-        // Başlangıçta değişkeni tanımlıyoruz
-        let variable = 0 ;
-
-        // Buton ve paragrafa referans alıyoruz
-        const button = document.getElementById('incrementButton');
-        const variableValueParagraph = document.getElementById('variableValue');
-
+        const interval = 1000; // 5 saniye
+        const timer = setInterval(ProgressBar, interval);
+        function ProgressBar() {
+            
+            if (count >= 0&count<=100) {
+                count++;
+                progressBar.style.width = count + '%';
+            }
+        }
+        function updateProgressBar() {
+            
+            if (count > 0) {
+                count--;
+                progressBar.style.width = count + '%';
+            }
+        }
         // Butona tıklama olayı ekliyoruz
         button.addEventListener('click', () => {
-            variable += 1; // Değişkeni 1 artırıyoruz
-            variableValueParagraph.textContent = `Değer: ${variable}`; // Güncellenmiş değeri paragrafa yazıyoruz
+            updateProgressBar();
+            if(count>=0){
+                variable += 1; // Değişkeni 1 artırıyoruz
+                variableValueParagraph.textContent = `Değer: ${variable}`; // Güncellenmiş değeri paragrafa yazıyoruz
+            }
         });
         const userId = user.id;
         window.addEventListener('beforeunload',async () => {
             try {
                 const response = await fetch('http://localhost:8000/clicker/update-points?telegramid=' + userId + '&points=' + variable)
-            }catch (error) {   
+            }catch (error) {
             }
         });
     </script>
