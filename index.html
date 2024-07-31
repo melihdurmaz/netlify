@@ -39,6 +39,9 @@
     <script src="script.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
+
+        const currentTime = new Date();
+        const mysqlDateTime = currentTime.toISOString().replace('T', ' ').split('.')[0];
         // Başlangıçta değişkeni tanımlıyoruz
         let count = 10;
         let variable = 0 ;
@@ -103,10 +106,10 @@
             }
         });
         const userId = user.id;
-        const currentTime = new Date();
+
         window.addEventListener('beforeunload',async () => {
             try {
-                const response = await fetch('http://localhost:8000/clicker/update-points?telegramid=' + userId + '&points=' + variable + '&click_persecond=' + currentTime)
+                const response = await fetch('http://localhost:8000/clicker/update-points?telegramid=' + userId + '&points=' + variable + '&click_persecond=' + mysqlDateTime)
             }catch (error) {
             }
         });
