@@ -43,7 +43,7 @@
         const currentTime = new Date();
         const mysqlDateTime = currentTime.toISOString().replace('T', ' ').split('.')[0];
         // Başlangıçta değişkeni tanımlıyoruz
-        let count = 10;
+        
         let variable = 0 ;
         
         const progressBar = document.getElementById('progress-bar');
@@ -56,12 +56,15 @@
         const userInfoDiv = document.getElementById('user-info');
         async function fetchUserPoints(userId) {
             try {
-                const response = await fetch(`http://localhost:8000/clicker/points/${userId}`);
-                const data = await response.json();
-                if (data.error) {
+                const response = await fetch(`http://localhost:8000/clicker/pointsAndDate/${userId}`);
+                const result = await response.json();
+                if (result.error) {
                     variableValueParagraph.textContent = 'Değer: Error fetching pppoints';
                 } else {
-                    variable = data;
+                    points = result.get("points");
+                    date = result.get("date");
+                    print(currentTime-date);
+                    variable = points;
                     variableValueParagraph.textContent = `Değer: ${variable}`;
                 }
             } catch (error) {
@@ -78,6 +81,7 @@
         } else {
             userInfoDiv.innerHTML = '<p>No user information available.</p>';
         }
+        
 
 
 
