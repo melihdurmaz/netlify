@@ -68,9 +68,9 @@
                 if (data.error) {
                     variableValueParagraph.textContent = 'Değer: Error fetching points';
                 } else {
-                    const points = data.points;
+                    variable = data.points;
                     const clickPower = data.click_power;
-                    variableValueParagraph.textContent = `Değer: ${points}`;
+                    variableValueParagraph.textContent = `Değer: ${variable}`;
                     clickPowerParagraph.textContent = `Click Power Gücü: ${clickPower}`;
                 }
             } catch (error) {
