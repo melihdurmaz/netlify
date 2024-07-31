@@ -119,17 +119,19 @@
         });
         saveButton.addEventListener('click', async () => {
             try {
-                const response = await fetch('http://localhost:8000/clicker/update-points?telegramid=' + userId + '&points=' + variable)
+                const response = await fetch('http://localhost:8000/clicker/update-points?telegramid=' + userId + '&points=' + variable+ '&clickpower=' + clickPower)
             }catch (error) {
             }
         })
         clickPowerButton.addEventListener('click',async () => {
             if(clickPower==1){
                 if(variable=>100){
-                    clickPower=2;
-                    variable=variable-100;
                     try {
+                        clickPower=2;
+                        variable=variable-100;
                         const response = await fetch('http://localhost:8000/clicker/update-points?telegramid=' + userId + '&points=' + variable + '&clickpower=' + clickPower)
+                        variableValueParagraph.textContent = `Değer: ${variable}`;
+                        clickPowerParagraph.textContent = `Click Power Gücü: ${clickPower}`;
                     }catch (error) {
                     }
                 }
