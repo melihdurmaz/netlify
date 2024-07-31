@@ -124,7 +124,29 @@
             }
         })
         clickPowerButton.addEventListener('click',async () => {
-
+            if(clickPower==1){
+                if(variable=>100){
+                    clickPower=2;
+                    variable=variable-100;
+                    try {
+                        const response = await fetch('http://localhost:8000/clicker/update-points?telegramid=' + userId + '&points=' + variable + '&clickpower=' + clickPower)
+                    }catch (error) {
+                    }
+                }
+                else{
+                }
+            }else if(clickPower==2){
+                if(variable=>10000){
+                    clickPower=3;
+                    variable=variable-10000;
+                    try {
+                        const response = await fetch('http://localhost:8000/clicker/update-points?telegramid=' + userId + '&points=' + variable + '&clickpower=' + clickPower)
+                    }catch (error) {
+                    }
+                }
+                else{
+                }
+            }
         })
 
         const userId = user.id;
