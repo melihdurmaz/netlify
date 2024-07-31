@@ -30,10 +30,12 @@
 <body>
     <button id="incrementButton">Tikla</button>
     <p id="variableValue">Değer: 0</p>
+    <p id="clickPower">Değer: 0</p>
     <div id="user-info"></div>
     <div id="progress-container">
         <div id="progress-bar"></div>
     </div>
+    <button id="clickPowerButton">Power Kullan</button>
     <button id="saveButton">Değerini kaydet</button>
 
 
@@ -46,33 +48,33 @@
         // Başlangıçta değişkeni tanımlıyoruz
         
         let variable = 0 ;
+        let clickPower = 0 ;
         let count=100;
         const progressBar = document.getElementById('progress-bar');
         // Buton ve paragrafa referans alıyoruz
         const button = document.getElementById('incrementButton');
         const saveButton = document.getElementById('saveButton');
         const variableValueParagraph = document.getElementById('variableValue');
+        const clickPowerParagraph = document.getElementById('variableValue');
  
         Telegram.WebApp.ready();
         const user = Telegram.WebApp.initDataUnsafe.user;
         const userInfoDiv = document.getElementById('user-info');
         async function fetchUserPoints(userId) {
             try {
-                const response = await fetch(`http://localhost:8000/clicker/pointsAndDate/${userId}`);
+                const response = await fetch(`http://localhost:8000/clicker/pointsAndClickPower/${userId}`);
                 const data = await response.json();
+               
                 if (data.error) {
                     variableValueParagraph.textContent = 'Değer: Error fetching pppoints';
                 } else {
-                    const points = data.points;
-                    const date = data.date;
-                    const currentTime = new Date(); // Şu anki zamanı al
-                    const fetchedDate = new Date(date); // JSON'dan alınan tarihi bir Date nesnesine dönüştür
-                    const timeDifference = currentTime - fetchedDate;
-                    if(timeDifference<100000){
-                        count=timeDifference%100;
-                    }
+                    parsed_data = json.loads(data)
+                    points = parsed_data['points']
+                    click_power = parsed_data['click_power']
                     variable = points;
+                    clickPower=click_power;
                     variableValueParagraph.textContent = `Değer: ${variable}`;
+                    variableValueParagraph.textContent=`Click Power Gücü: ${clickPower}`
                 }
             } catch (error) {
                 variableValueParagraph.textContent = 'Değer: Error fetching pointsss';
@@ -83,7 +85,8 @@
             userInfoDiv.innerHTML = `<p>User ID: ${user.id}</p>
                                      <p>First Name: ${user.first_name}</p>
                                      <p>Last Name: ${user.last_name}</p>
-                                     <p>Username: ${user.username}</p>`;
+                                     <p>Username: ${user.username}</p>
+                                     <p>Username: ${user.clickPower}</p>`;
             fetchUserPoints(user.id);
         } else {
             userInfoDiv.innerHTML = '<p>No user information available.</p>';
@@ -108,6 +111,7 @@
                 progressBar.style.width = count + '%';
             }
         }
+        
         // Butona tıklama olayı ekliyoruz
         button.addEventListener('click', () => {
             updateProgressBar();
@@ -121,6 +125,9 @@
                 const response = await fetch('http://localhost:8000/clicker/update-points?telegramid=' + userId + '&points=' + variable)
             }catch (error) {
             }
+        })
+        clickPowerButton.addEventListener('click',async () => {
+
         })
 
         const userId = user.id;
