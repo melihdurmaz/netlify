@@ -94,7 +94,7 @@
         // Butona tıklama olayı ekliyoruz
         button.addEventListener('click', () => {
             updateProgressBar();
-            if(count>=0){
+            if(count>0){
                 variable += 1; // Değişkeni 1 artırıyoruz
                 variableValueParagraph.textContent = `Değer: ${variable}`; // Güncellenmiş değeri paragrafa yazıyoruz
             }
