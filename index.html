@@ -30,7 +30,7 @@
 <body>
     <button id="incrementButton">Tikla</button>
     <p id="variableValue">Değer: 0</p>
-    <p id="clickPower">Değer: 0</p>
+    <p id="clickPower">Click Power Gücü: 1</p>
     <div id="user-info"></div>
     <div id="progress-container">
         <div id="progress-bar"></div>
@@ -113,8 +113,20 @@
         button.addEventListener('click', () => {
             updateProgressBar();
             if(count>0){
-                variable += 1; // Değişkeni 1 artırıyoruz
-                variableValueParagraph.textContent = `Değer: ${variable}`; // Güncellenmiş değeri paragrafa yazıyoruz
+                if (clickPower == 1) {
+                    variable += 1; // Değişkeni 1 artırıyoruz
+                    variableValueParagraph.textContent = `Değer: ${variable}`;
+                } else if (clickPower == 2) {
+                    variable += 2; // Değişkeni 2 artırıyoruz
+                    variableValueParagraph.textContent = `Değer: ${variable}`;
+                } else if (clickPower == 3) {
+                    variable += 4; // Değişkeni 4 artırıyoruz
+                    variableValueParagraph.textContent = `Değer: ${variable}`;
+                }
+                else{
+                    variableValueParagraph.textContent = `Değer: ${variable}`;
+                }
+
             }
         });
         saveButton.addEventListener('click', async () => {
@@ -124,30 +136,23 @@
             }
         })
         clickPowerButton.addEventListener('click',async () => {
-            if(clickPower==1){
-                if(variable=>100){
-                    try {
-                        clickPower=2;
-                        variable=variable-100;
-                        const response = await fetch('http://localhost:8000/clicker/update-points?telegramid=' + userId + '&points=' + variable + '&clickpower=' + clickPower)
-                        variableValueParagraph.textContent = `Değer: ${variable}`;
-                        clickPowerParagraph.textContent = `Click Power Gücü: ${clickPower}`;
-                    }catch (error) {
-                    }
+            if(clickPower==1&variable>10){
+                clickPower=2;
+                variable=variable-10;
+                variableValueParagraph.textContent = `Değer: ${variable}`;
+                clickPowerParagraph.textContent = `Click Power Gücü: ${clickPower}`;
+                try {
+                    const response = await fetch('http://localhost:8000/clicker/update-points?telegramid=' + userId + '&points=' + variable + '&clickpower=' + clickPower)
+                }catch (error) {
                 }
-                else{
-                }
-            }else if(clickPower==2){
-                if(variable=>10000){
+            }else if(clickPower==2&variable>10000){ 
                     clickPower=3;
                     variable=variable-10000;
                     try {
                         const response = await fetch('http://localhost:8000/clicker/update-points?telegramid=' + userId + '&points=' + variable + '&clickpower=' + clickPower)
                     }catch (error) {
                     }
-                }
-                else{
-                }
+            }else{
             }
         })
 
