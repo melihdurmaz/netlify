@@ -10,6 +10,9 @@
             padding: 10px 20px;
             margin: 10px;
         }
+        .incrementButton{
+            background: url('/assets/coin.png') no-repeat center center;
+        }
         #progress-container {
             width: 50%;
             background-color: #e0e0e0;
@@ -28,7 +31,7 @@
     </style>
 </head>
 <body>
-    <button id="incrementButton">Tikla</button>
+    <button id="incrementButton"  background: url('/assets/coin.png')>Tikla</button>
     <p id="variableValue">Değer: 0</p>
     <p id="clickPower">Click Power Gücü: 1</p>
     <div id="user-info"></div>
@@ -62,7 +65,7 @@
         const userInfoDiv = document.getElementById('user-info');
         async function fetchUserPoints(userId) {
             try {
-                const response = await fetch(`http://localhost:8000/clicker/pointsAndClickPower/${userId}`);
+                const response = await fetch(`http://localhost:8000/pointsAndClickPower/${userId}`);
                 const data = await response.json();
 
                 if (data.error) {
@@ -131,7 +134,7 @@
         });
         saveButton.addEventListener('click', async () => {
             try {
-                const response = await fetch('http://localhost:8000/clicker/update-points?telegramid=' + userId + '&points=' + variable+ '&clickpower=' + clickPower)
+                const response = await fetch('http://localhost:8000/update-points?telegramid=' + userId + '&points=' + variable+ '&clickpower=' + clickPower)
             }catch (error) {
             }
         })
@@ -142,14 +145,14 @@
                 variableValueParagraph.textContent = `Değer: ${variable}`;
                 clickPowerParagraph.textContent = `Click Power Gücü: ${clickPower}`;
                 try {
-                    const response = await fetch('http://localhost:8000/clicker/update-points?telegramid=' + userId + '&points=' + variable + '&clickpower=' + clickPower)
+                    const response = await fetch('http://localhost:8000/update-points?telegramid=' + userId + '&points=' + variable + '&clickpower=' + clickPower)
                 }catch (error) {
                 }
             }else if(clickPower==2&variable>10000){ 
                     clickPower=3;
                     variable=variable-10000;
                     try {
-                        const response = await fetch('http://localhost:8000/clicker/update-points?telegramid=' + userId + '&points=' + variable + '&clickpower=' + clickPower)
+                        const response = await fetch('http://localhost:8000/update-points?telegramid=' + userId + '&points=' + variable + '&clickpower=' + clickPower)
                     }catch (error) {
                     }
             }else{
@@ -160,7 +163,7 @@
 
         window.addEventListener('beforeunload',async () => {
             try {
-                const response = await fetch('http://localhost:8000/clicker/update-points?telegramid=' + userId + '&points=' + variable)
+                const response = await fetch('http://localhost:8000/update-points?telegramid=' + userId + '&points=' + variable)
             }catch (error) {
             }
         });
