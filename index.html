@@ -67,12 +67,14 @@
             try {
                 const response = await fetch(`http://localhost:8000/pointsAndClickPower/${userId}`);
                 const data = await response.json();
-                
+
                 if (data.error) {
                     variableValueParagraph.textContent = 'Değer: Error fetching points';
                 } else {
                 variable = data.points;
                 const clickPower = data.click_power;
+                count=data.bar;
+                progressBar.style.width = count + '%';
                 variableValueParagraph.textContent = `Değer: ${variable}`;
                 clickPowerParagraph.textContent = `Click Power Gücü: ${clickPower}`;
                 }
