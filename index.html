@@ -52,7 +52,6 @@
         
         let variable = 0 ;
         let clickPower = 1 ;
-        let count=100;
         const progressBar = document.getElementById('progress-bar');
         // Buton ve paragrafa referans alıyoruz
         const button = document.getElementById('incrementButton');
@@ -136,7 +135,7 @@
         });
         saveButton.addEventListener('click', async () => {
             try {
-                const response = await fetch('http://localhost:8000/update-points?telegramid=' + userId + '&points=' + variable+ '&clickpower=' + clickPower)
+                const response = await fetch('http://localhost:8000/update-points?telegramid=' + userId + '&points=' + variable+ '&clickpower=' + clickPower + '&bar=' + count)
             }catch (error) {
             }
         })
