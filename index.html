@@ -86,8 +86,7 @@
             userInfoDiv.innerHTML = `<p>User ID: ${user.id}</p>
                                      <p>First Name: ${user.first_name}</p>
                                      <p>Last Name: ${user.last_name}</p>
-                                     <p>Username: ${user.username}</p>
-                                     <p>Username: ${user.clickPower}</p>`;
+                                     <p>Username: ${user.username}</p>`;
             fetchUserPoints(user.id);
         } else {
             userInfoDiv.innerHTML = '<p>No user information available.</p>';
@@ -153,14 +152,14 @@
                 variableValueParagraph.textContent = `Değer: ${variable}`;
                 clickPowerParagraph.textContent = `Click Power Gücü: ${clickPower}`;
                 try {
-                    const response = await fetch('http://localhost:8000/update-points?telegramid=' + userId + '&points=' + variable + '&clickpower=' + clickPower)
+                    const response = await fetch('http://localhost:8000/update-points?telegramid=' + userId + '&points=' + variable + '&clickpower=' + clickPower+ '&bar=' + count)
                 }catch (error) {
                 }
             }else if(clickPower==2&&variable>10000){ 
                     clickPower=3;
                     variable=variable-10000;
                     try {
-                        const response = await fetch('http://localhost:8000/update-points?telegramid=' + userId + '&points=' + variable + '&clickpower=' + clickPower)
+                        const response = await fetch('http://localhost:8000/update-points?telegramid=' + userId + '&points=' + variable + '&clickpower=' + clickPower+ '&bar=' + count)
                     }catch (error) {
                     }
             }else{
@@ -170,10 +169,19 @@
         const userId = user.id;
 
         window.addEventListener('beforeunload',async () => {
-            try {
-                const response = await fetch('http://localhost:8000/update-points?telegramid=' + userId + '&points=' + variable)
-            }catch (error) {
-            }
+            const response = await fetch('http://localhost:8000/update-points', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                telegramid: userId,
+                points: variable,
+                clickpower:clickPower,
+                bar:count
+            })
+        });
+
         });
     </script>
 </body>
