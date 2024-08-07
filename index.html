@@ -14,11 +14,14 @@
             background: url('/assets/coin.png') no-repeat center center;
         }
         #progress-container {
-            width: 50%;
+           
             background-color: #e0e0e0;
             border: 1px solid #000;
             height: 30px;
             margin-top: 20px;
+            width: 90%; /* Ekran boyutuna göre ayarlandığında daha iyi görünür */
+            max-width: 500px; /* Maksimum genişlik belirleyerek büyük ekranlarda düzeni koru */
+
         }
 
         #progress-bar {
@@ -49,7 +52,7 @@
 
         
         // Başlangıçta değişkeni tanımlıyoruz
-        
+        let count = 0;
         let variable = 0 ;
         let clickPower = "";
         const progressBar = document.getElementById('progress-bar');
@@ -59,9 +62,10 @@
         const variableValueParagraph = document.getElementById('variableValue');
         const clickPowerParagraph = document.getElementById('clickPower');
  
-        Telegram.WebApp.ready();
+        
         const user = Telegram.WebApp.initDataUnsafe.user;
         const userInfoDiv = document.getElementById('user-info');
+        Telegram.WebApp.ready();
         async function fetchUserPoints(userId) {
             try {
                 const response = await fetch(`http://localhost:8000/pointsAndClickPower/${userId}`);
@@ -122,7 +126,7 @@
         // Butona tıklama olayı ekliyoruz
         button.addEventListener('click', () => {
             updateProgressBar();
-            if(count>0){
+            if(count > 0){
                 if (clickPower == 1) {
                     variable += 1; // Değişkeni 1 artırıyoruz
                     variableValueParagraph.textContent = `Değer: ${variable}`;
@@ -133,10 +137,9 @@
                     variable += 4; // Değişkeni 4 artırıyoruz
                     variableValueParagraph.textContent = `Değer: ${variable}`;
                 }
-                else{
+                else {
                     variableValueParagraph.textContent = `Değer: ${variable}`;
                 }
-
             }
         });
         saveButton.addEventListener('click', async () => {
