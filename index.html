@@ -100,7 +100,7 @@
         const timer = setInterval(ProgressBar, interval);
         function ProgressBar() {
             
-            if (count >= 0&count<=100) {
+            if (count >= 0&&count<=100) {
                 count++;
                 progressBar.style.width = count + '%';
             }
@@ -140,16 +140,16 @@
             }
         })
         clickPowerButton.addEventListener('click',async () => {
-            if(clickPower==1&variable>10){
+            if(clickPower==1&&variable>100){
                 clickPower=2;
-                variable=variable-10;
+                variable-=100;
                 variableValueParagraph.textContent = `Değer: ${variable}`;
                 clickPowerParagraph.textContent = `Click Power Gücü: ${clickPower}`;
                 try {
                     const response = await fetch('http://localhost:8000/update-points?telegramid=' + userId + '&points=' + variable + '&clickpower=' + clickPower)
                 }catch (error) {
                 }
-            }else if(clickPower==2&variable>10000){ 
+            }else if(clickPower==2&&variable>10000){ 
                     clickPower=3;
                     variable=variable-10000;
                     try {
