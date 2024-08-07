@@ -118,17 +118,19 @@
         
         // Butona tıklama olayı ekliyoruz
         button.addEventListener('click', () => {
-            updateProgressBar();
             if(count > 0){
                 if (clickPower == 1&&count>=1) {
                     variable += 1; // Değişkeni 1 artırıyoruz
                     variableValueParagraph.textContent = `Değer: ${variable}`;
+                    updateProgressBar();
                 } else if (clickPower == 2&&count>=2) {
                     variable += 2; // Değişkeni 2 artırıyoruz
                     variableValueParagraph.textContent = `Değer: ${variable}`;
+                    updateProgressBar();
                 } else if (clickPower == 3&&count>=4) {
                     variable += 4; // Değişkeni 4 artırıyoruz
                     variableValueParagraph.textContent = `Değer: ${variable}`;
+                    updateProgressBar();
                 }
                 else {
                     variableValueParagraph.textContent = `Değer: ${variable}`;
