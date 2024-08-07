@@ -107,8 +107,14 @@
         }
         function updateProgressBar() {
             
-            if (count > 0) {
+            if (count > 0&&clickPower==1) {
                 count--;
+                progressBar.style.width = count + '%';
+            }else if(count > 0&&clickPower==2){
+                count=count-2;
+                progressBar.style.width = count + '%';
+            }else if(count > 0&&clickPower==3){
+                count=count-4;
                 progressBar.style.width = count + '%';
             }
         }
