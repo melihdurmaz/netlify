@@ -89,7 +89,6 @@
                 variableValueParagraph.textContent = 'Değer: Error fetching points';
             }
         }
-
         if (user) {
             userInfoDiv.innerHTML = `<p>User ID: ${user.id}</p>
                                      <p>First Name: ${user.first_name}</p>
@@ -101,12 +100,9 @@
         }
         
 
-
-
         const interval = 1000; // 5 saniye
         const timer = setInterval(ProgressBar, interval);
         function ProgressBar() {
-            
             if (count >= 0&&count<=100) {
                 count++;
                 progressBar.style.width = count + '%';
@@ -118,26 +114,19 @@
                 count--;
                 progressBar.style.width = count + '%';
             }
-            // else if(count > 0&&clickPower==2){
-            //     count=count-2;
-            //     progressBar.style.width = count + '%';
-            // }else if(count > 0&&clickPower==3){
-            //     count=count-4;
-            //     progressBar.style.width = count + '%';
-            // }
         }
         
         // Butona tıklama olayı ekliyoruz
         button.addEventListener('click', () => {
             updateProgressBar();
             if(count > 0){
-                if (clickPower == 1) {
+                if (clickPower == 1&&count>=1) {
                     variable += 1; // Değişkeni 1 artırıyoruz
                     variableValueParagraph.textContent = `Değer: ${variable}`;
-                } else if (clickPower == 2) {
+                } else if (clickPower == 2&&count>=2) {
                     variable += 2; // Değişkeni 2 artırıyoruz
                     variableValueParagraph.textContent = `Değer: ${variable}`;
-                } else if (clickPower == 3) {
+                } else if (clickPower == 3&&count>=4) {
                     variable += 4; // Değişkeni 4 artırıyoruz
                     variableValueParagraph.textContent = `Değer: ${variable}`;
                 }
