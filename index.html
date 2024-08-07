@@ -51,7 +51,7 @@
         // Başlangıçta değişkeni tanımlıyoruz
         
         let variable = 0 ;
-        let clickPower = 1 ;
+        let clickPower = "";
         const progressBar = document.getElementById('progress-bar');
         // Buton ve paragrafa referans alıyoruz
         const button = document.getElementById('incrementButton');
@@ -71,7 +71,7 @@
                     variableValueParagraph.textContent = 'Değer: Error fetching points';
                 } else {
                 variable = data.points;
-                const clickPower = data.click_power;
+                clickPower = data.click_power;
                 count=data.bar;
                 progressBar.style.width = count + '%';
                 variableValueParagraph.textContent = `Değer: ${variable}`;
