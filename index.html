@@ -27,7 +27,7 @@
         const userId = Telegram.WebApp.initDataUnsafe.user.id;
         button.addEventListener('click', async () => {
             try {
-                const response = await fetch('http://127.0.0.1:8000/connections/verify?telegramid='+userId);
+                const response = await fetch(`http://127.0.0.1:8000/connections/verify?telegramid=${userId}`);
                 
                 const data = await response.json();
                 console.log(data); // Sunucudan gelen yanıtı konsola yazdır
