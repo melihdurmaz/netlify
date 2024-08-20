@@ -8,170 +8,19 @@
         html {
             zoom: 100%; /* Zoom seviyesini %100 olarak ayarla */
         }
-
-        button {
-            font-size: 16px;
+        #checkVerified {
+            margin: 20px;
             padding: 10px 20px;
-            margin: 10px;
+            font-size: 16px;
         }
-        .incrementButton{
-            background: url('/assets/coin.png') no-repeat center center;
-        }
-        #progress-container {
-           
-            background-color: #e0e0e0;
-            border: 1px solid #000;
-            height: 30px;
-            margin-top: 20px;
-            width: 90%; /* Ekran boyutuna göre ayarlandığında daha iyi görünür */
-            max-width: 500px; /* Maksimum genişlik belirleyerek büyük ekranlarda düzeni koru */
-
-        }
-
-        #progress-bar {
-            width: 100%;
-            height: 100%;
-            background-color: #76c7c0;
-            transition: width 0.3s;
-        }
-
     </style>
 </head>
 <body>
-    <button id="incrementButton"  background: url('/assets/coin.png')>Tikla</button>
-    <p id="variableValue">Değer: 0</p>
-    <p id="clickPower">Click Power Gücü: 1</p>
-    <div id="user-info"></div>
-    <div id="progress-container">
-        <div id="progress-bar"></div>
-    </div>
-    <button id="clickPowerButton">Power Kullan</button>
-    <button id="saveButton">Değerini kaydet</button>
+    <button id="checkVerified">Doğrula</button>
 
-
-    <script src="script.js"></script>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="moment-with-locales.js"></script>
     <script>
-
-        
-        // Başlangıçta değişkeni tanımlıyoruz
-        let count = 0;
-        let variable = 0 ;
-        let clickPower = "";
-        const progressBar = document.getElementById('progress-bar');
-        // Buton ve paragrafa referans alıyoruz
-        const button = document.getElementById('incrementButton');
-        const saveButton = document.getElementById('saveButton');
-        const variableValueParagraph = document.getElementById('variableValue');
-        const clickPowerParagraph = document.getElementById('clickPower');
- 
-        
-        const user = Telegram.WebApp.initDataUnsafe.user;
-        const userInfoDiv = document.getElementById('user-info');
-        Telegram.WebApp.ready();
-        async function fetchUserPoints(userId) {
-            try {
-                const response = await fetch(`http://localhost:8000/pointsAndClickPower/${userId}`);
-                const data = await response.json();
-
-                if (data.error) {
-                    variableValueParagraph.textContent = 'Değer: Error fetching points';
-                } else {
-                variable = data.points;
-                clickPower = data.click_power;
-                count=data.bar;
-                progressBar.style.width = count + '%';
-                variableValueParagraph.textContent = `Değer: ${variable}`;
-                clickPowerParagraph.textContent = `Click Power Gücü: ${clickPower}`;
-                }
-            } catch (error) {
-                variableValueParagraph.textContent = 'Değer: Error fetching points';
-            }
-        }
-        if (user) {
-            userInfoDiv.innerHTML = `<p>User ID: ${user.id}</p>
-                                     <p>First Name: ${user.first_name}</p>
-                                     <p>Last Name: ${user.last_name}</p>
-                                     <p>Username: ${user.username}</p>`;
-            fetchUserPoints(user.id);
-        } else {
-            userInfoDiv.innerHTML = '<p>No user information available.</p>';
-        }
-        
-
-        const interval = 1000; // 5 saniye
-        const timer = setInterval(ProgressBar, interval);
-        function ProgressBar() {
-            if (count >= 0&&count<=100) {
-                count++;
-                progressBar.style.width = count + '%';
-            }
-        }
-        function updateProgressBar() {
-            
-            if (count > 0) {
-                count--;
-                progressBar.style.width = count + '%';
-            }
-        }
-        
-        // Butona tıklama olayı ekliyoruz
-        button.addEventListener('click', () => {
-            if(count > 0){
-                if (clickPower == 1&&count>=1) {
-                    variable += 1; // Değişkeni 1 artırıyoruz
-                    variableValueParagraph.textContent = `Değer: ${variable}`;
-                    updateProgressBar();
-                } else if (clickPower == 2&&count>=2) {
-                    variable += 2; // Değişkeni 2 artırıyoruz
-                    variableValueParagraph.textContent = `Değer: ${variable}`;
-                    updateProgressBar();
-                } else if (clickPower == 3&&count>=4) {
-                    variable += 4; // Değişkeni 4 artırıyoruz
-                    variableValueParagraph.textContent = `Değer: ${variable}`;
-                    updateProgressBar();
-                }
-                else {
-                    variableValueParagraph.textContent = `Değer: ${variable}`;
-                }
-            }
+        document.getElementById('checkVerified').addEventListener('click', function() {
+            alert('Doğrulama başlatıldı!');
         });
-        saveButton.addEventListener('click', async () => {
-            try {
-                const response = await fetch('http://localhost:8000/update-points?telegramid=' + userId + '&points=' + variable+ '&clickpower=' + clickPower + '&bar=' + count)
-            }catch (error) {
-            }
-        })
-        clickPowerButton.addEventListener('click',async () => {
-            if(clickPower==1&&variable>100){
-                clickPower=2;
-                variable-=100;
-                variableValueParagraph.textContent = `Değer: ${variable}`;
-                clickPowerParagraph.textContent = `Click Power Gücü: ${clickPower}`;
-                try {
-                    const response = await fetch('http://localhost:8000/update-points?telegramid=' + userId + '&points=' + variable + '&clickpower=' + clickPower+ '&bar=' + count)
-                }catch (error) {
-                }
-            }else if(clickPower==2&&variable>10000){ 
-                    clickPower=3;
-                    variable=variable-10000;
-                    try {
-                        const response = await fetch('http://localhost:8000/update-points?telegramid=' + userId + '&points=' + variable + '&clickpower=' + clickPower+ '&bar=' + count)
-                    }catch (error) {
-                    }
-            }else{
-            }
-        })
-
-        const userId = user.id;
-
-        document.addEventListener('wheel', function(event) {
-            if (event.ctrlKey) {
-                    event.preventDefault(); // Ctrl tuşuyla zoom yapmayı engelle
-                }
-        }, { passive: false });
-
     </script>
 </body>
-</html>
