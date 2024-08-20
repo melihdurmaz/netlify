@@ -19,8 +19,28 @@
     <button id="checkVerified">Doğrula</button>
 
     <script>
-        document.getElementById('checkVerified').addEventListener('click', function() {
-            alert('Doğrulama başlatıldı!');
+        const button = document.getElementById('checkVerified')
+        const user = Telegram.WebApp.initDataUnsafe.user;
+        const userInfoDiv = document.getElementById('user-info');
+        Telegram.WebApp.ready();
+        async function checkVerified() {
+            const userID = user.id;
+            const response = await fetch(`http://localhost:8000/connections/${userID}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', // Gönderilen verinin JSON formatında olduğunu belirtir
+                },
+                body: JSON.stringify({
+                    userID: userID,
+                }),
+            });
+            const result = await response.json();
+        }
+        button.addEventListener('click', () => {
+
         });
+
+
+
     </script>
 </body>
