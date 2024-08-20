@@ -17,19 +17,20 @@
 </head>
 <body>
     <button id="checkVerified">Doğrula</button>
-
+    <script src="script.js"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="moment-with-locales.js"></script>
     <script>
         const button = document.getElementById('checkVerified')
+
         const user = Telegram.WebApp.initDataUnsafe.user;
-        const userInfoDiv = document.getElementById('user-info');
         Telegram.WebApp.ready();
-        async function checkVerified() {
-            const userID = user.id;
-            const response = await fetch(`http://localhost:8000/connections/verify/${userID}`);
-            const result = await response.json();
-        }
-        button.addEventListener('click', () => {
-            checkVerified();
+        const userId = user.id;
+        button.addEventListener('click', async () => {
+            try {
+                const response = await fetch(`http://localhost:8000/connections/verify/${userID}`);
+            }catch (error) {
+            }
         });
 
 
