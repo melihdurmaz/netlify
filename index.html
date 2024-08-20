@@ -25,19 +25,11 @@
         Telegram.WebApp.ready();
         async function checkVerified() {
             const userID = user.id;
-            const response = await fetch(`http://localhost:8000/connections/${userID}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json', // Gönderilen verinin JSON formatında olduğunu belirtir
-                },
-                body: JSON.stringify({
-                    userID: userID,
-                }),
-            });
+            const response = await fetch(`http://localhost:8000/connections/verify/${userID}`);
             const result = await response.json();
         }
         button.addEventListener('click', () => {
-
+            checkVerified();
         });
 
 
