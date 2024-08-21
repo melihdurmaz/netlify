@@ -16,6 +16,7 @@
     </style>
 </head>
 <body>
+    <button id="authButton">Authenticate with Telegram</button>
     <button id="checkVerified">Doğrula</button>
     <script src="script.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -44,4 +45,14 @@
 
 
     </script>
+
+
+    <script type="text/javascript">
+        document.getElementById('authButton').addEventListener('click', function() {
+            var redirectUrl = "https://oauth.telegram.org/auth?bot_id=7120438953&origin=https%3A%2F%2Fedc0-78-177-176-29.ngrok-free.app&request_access=write&return_to=https%3A%2F%2Fedc0-78-177-176-29.ngrok-free.app%2Fconnections%2Fconnect";
+            window.location.href = redirectUrl;
+        });
+    </script>
+
+
 </body>
