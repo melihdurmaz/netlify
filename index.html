@@ -1,58 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Document</title>
-    <style>
-        html {
-            zoom: 100%; /* Zoom seviyesini %100 olarak ayarla */
-        }
-        #checkVerified {
-            margin: 20px;
-            padding: 10px 20px;
-            font-size: 16px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Telegram Authentication</title>
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.5);
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: #fff;
+    }
+    .container {
+      background-color: #242424;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
+    .button {
+      background-color: #FFDA68;
+      color: #151515;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 20px;
+    }
+    .button:hover {
+      opacity: 0.8;
+    }
+    .popup-note {
+      margin-bottom: 10px;
+    }
+  </style>
 </head>
 <body>
-    <button id="authButton">Authenticate with Telegram</button>
-    <button id="checkVerified">Doğrula</button>
-    <script src="script.js"></script>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="moment-with-locales.js"></script>
-    <script>
-        const button = document.getElementById('checkVerified')
+  <div class="container">
+    <div class="popup-note">
+      <p>Note: If you can't see Telegram Pop-up, please enable popups from the top right corner.</p>
+    </div>
+    <button class="button" onclick="startTelegramAuth()">Open Pop-up Again</button>
+    <div id="error-message"></div>
+  </div>
 
-        Telegram.WebApp.ready();
-        const userId = Telegram.WebApp.initDataUnsafe.user.id;
-        button.addEventListener('click', async () => {
-            try {
-                const response = await fetch(`http://127.0.0.1:8000/conecctions/verify?telegramid=${userId}`,{
-                    headers: {
-                    'Content-Type': 'application/json'
-                    }
-                });
-                
-                const data = await response.json();
-                console.log(data); // Sunucudan gelen yanıtı konsola yazdır
-
-            } catch (error) {
-                console.error('Error:', error); // Hata durumunda konsola yazdır
+  <script>
+    function startTelegramAuth() {
+      const redirectUrl = `${window.location.origin}/connect`;
+      const authUrl = `${window.location.origin}/start_telegram_auth?redirect_url=${encodeURIComponent(redirectUrl)}`;
+      window.location.href = authUrl;
+    }
+    
+    // Check for Telegram auth result in the URL
+    window.onload = function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const tgAuthResult = urlParams.get('tgAuthResult');
+      
+      if (tgAuthResult) {
+        // Handle the authentication result here
+        // For example, send the result to your backend for further processing
+        fetch('/connect?tgAuthResult=' + encodeURIComponent(tgAuthResult))
+          .then(response => response.json())
+          .then(data => {
+            if (data.access_token) {
+              console.log('Access Token:', data.access_token);
+              // Redirect or handle the authenticated state
+              window.location.href = '/'; // Redirect to home page or other
+            } else {
+              document.getElementById('error-message').innerText = data.detail || 'Authentication failed.';
             }
-        });
-
-
-
-    </script>
-
-
-    <script type="text/javascript">
-        document.getElementById('authButton').addEventListener('click', function() {
-            var redirectUrl = "https://oauth.telegram.org/auth?bot_id=7120438953&origin=https%3A%2F%2Fedc0-78-177-176-29.ngrok-free.app&request_access=write&return_to=https%3A%2F%2Fedc0-78-177-176-29.ngrok-free.app%2Fconnections%2Fconnect";
-            window.location.href = redirectUrl;
-        });
-    </script>
-
-
+          });
+      }
+    };
+  </script>
 </body>
+</html>
