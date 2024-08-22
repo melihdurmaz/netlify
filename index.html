@@ -51,7 +51,7 @@
   <script>
     function startTelegramAuth() {
       const redirectUrl = `${window.location.origin}/connect`;
-      const authUrl = `${window.location.origin}/start_telegram_auth?redirect_url=${encodeURIComponent(redirectUrl)}`;
+      const authUrl = `http://127.0.0.1:8000/start_telegram_auth?redirect_url=${encodeURIComponent(redirectUrl)}`;
       window.location.href = authUrl;
     }
     
@@ -63,7 +63,7 @@
       if (tgAuthResult) {
         // Handle the authentication result here
         // For example, send the result to your backend for further processing
-        fetch('/connect?tgAuthResult=' + encodeURIComponent(tgAuthResult))
+        fetch(`http://127.0.0.1:8000/connect?tgAuthResult=${encodeURIComponent(tgAuthResult)}`)
           .then(response => response.json())
           .then(data => {
             if (data.access_token) {
