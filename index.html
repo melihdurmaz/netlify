@@ -98,8 +98,7 @@
 
     async function startTelegramAuth() {
       const bearerToken = localStorage.getItem('bearerToken');
-      const authUrl = `http://127.0.0.1:8000/authorize-url`;
-
+      const authUrl = `http://127.0.0.1:8000/connections/authorize-url`;
       try {
         const response = await fetch(authUrl, {
           method: 'GET',
@@ -108,69 +107,66 @@
           }
         });
 
+      
+        if (response.ok) {
+          const data = await response.json();
+          window.location.href = data.url; 
+        } else {
+          document.getElementById('telegram-error-message').innerText = 'Telegram connection failed: ' + response.statusText;
+        }
+      } catch (error) {
+        document.getElementById('telegram-error-message').innerText = 'An error occurred: ' + error.message;
+      }
+    }
+    async function startTwitterAuth() {
+      const bearerToken = localStorage.getItem('bearerToken');
+      const authUrl = `http://127.0.0.1:8000/twitter/authorize-url`;
+      
+      try {
+        const response = await fetch(authUrl, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${bearerToken}`
+          }
+        });
+      
         if (response.ok) {
           const data = await response.json();
           window.location.href = data; // Assuming the server responds with the authorization URL
         } else {
-          console.error('Error:', response.statusText);
+          document.getElementById('twitter-error-message').innerText = 'Twitter connection failed: ' + response.statusText;
         }
       } catch (error) {
-        console.error('Error:', error);
+        document.getElementById('twitter-error-message').innerText = 'An error occurred: ' + error.message;
       }
-    }
-    async function startTwitterAuth() {
-    const bearerToken = localStorage.getItem('bearerToken');
-    const authUrl = `http://127.0.0.1:8000/twitter/authorize-url`;
-    
-    try {
-      const response = await fetch(authUrl, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${bearerToken}`
-        }
-      });
-    
-      if (response.ok) {
-        const data = await response.json();
-        window.location.href = data; // Assuming the server responds with the authorization URL
-      } else {
-        document.getElementById('twitter-error-message').innerText = 'Twitter connection failed: ' + response.statusText;
-      }
-    } catch (error) {
-      document.getElementById('twitter-error-message').innerText = 'An error occurred: ' + error.message;
-    }
-} 
+    } 
   
-      window.onload = function() {
-      const hash = window.location.hash.substring(1);
-      const hashParams = new URLSearchParams(hash);
-      const tgAuthResult = hashParams.get('tgAuthResult');
-      const token = new URLSearchParams(window.location.search).get('token');
-      const loginBearerToken = localStorage.getItem('bearerToken');
+    window.onload = async function() {
+        const hash = window.location.hash.substring(1);
+        const hashParams = new URLSearchParams(hash);
+        const tgAuthResult = hashParams.get('tgAuthResult');
+        const bearerToken = localStorage.getItem('bearerToken');
+        if (!tgAuthResult || !bearerToken) {
+          console.error('Missing tgAuthResult or bearerToken');
+          return;
+       }
+        const authUrl=`http://127.0.0.1:8000/connections/callback?tgAuthResult=${tgAuthResult}&bearerToken=${bearerToken}`;
+        try {
+        const response = await fetch(authUrl, {
+            method: 'GET',
+        });
 
-      const url = new URL('http://127.0.0.1:8000/callback');
-      url.searchParams.append('token', token);
-      url.searchParams.append('tgAuthResult', tgAuthResult);
-
-      fetch(url, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${loginBearerToken}`,
-          'Content-Type': 'application/json'
-        }
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.access_token) {
-          window.location.href = '/connections/connect';
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error(`Error response: ${response.status} - ${errorText}`);
         } else {
-          document.getElementById('telegram-error-message').innerText = data.detail || 'Authentication failed.';
+            const data = await response.json();
+            console.log('Success:', data);
         }
-      })
-      .catch(error => {
-        document.getElementById('telegram-error-message').innerText = 'An error occurred: ' + error.message;
-      });
+        } catch (error) {
+            console.error('Fetch error:', error);
+        }
     };
+
   </script>
-</body>
 </html>
