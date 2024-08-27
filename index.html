@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Telegram Authentication</title>
+  <title>Authentication</title>
   <style>
     body {
       display: flex;
@@ -51,6 +51,14 @@
 
   <div class="container">
     <div class="popup-note">
+      <p>Connect to Twitter</p>
+    </div>
+    <button class="button" onclick="startTwitterAuth()">Connect</button>
+    <div id="twitter-error-message"></div>
+  </div>
+
+  <div class="container">
+    <div class="popup-note">
       <p>Login</p>
     </div>
     <form id="login-form">
@@ -62,104 +70,107 @@
   </div>
 
   <script>
-document.getElementById('login-form').addEventListener('submit', function(event) {
-   // Sayfanın yeniden yüklenmesini engeller
+    document.getElementById('login-form').addEventListener('submit', function(event) {
+      event.preventDefault();
 
-  const username = document.getElementById('username').value;
-  const password = document.getElementById('password').value;
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
 
-  // API'ye istek gönder
-  fetch('http://127.0.0.1:8000/auth/login', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ username: username, password: password })
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (typeof data === 'string') { // Token is a plain string
-      // Store the token in a secure HTTP-only cookie
-      setSecureCookie('bearerToken', data, 365); // Set expiration for 1 year
-      // Redirect to the desired page after successful login
-      window.history.pushState({}, '', '/');
-    } else {
-      document.getElementById('login-error-message').innerText = 'Login failed: ' + (data.error || 'Unknown error');
+      fetch('http://127.0.0.1:8000/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username: username, password: password })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (typeof data === 'string') {
+          localStorage.setItem('bearerToken', data);
+        } else {
+          document.getElementById('login-error-message').innerText = 'Login failed: ' + (data.error || 'Unknown error');
+        }
+      })
+      .catch(error => {
+        document.getElementById('login-error-message').innerText = 'Login failed: ' + error.message;
+      });
+    });
+
+    async function startTelegramAuth() {
+      const bearerToken = localStorage.getItem('bearerToken');
+      const authUrl = `http://127.0.0.1:8000/authorize-url`;
+
+      try {
+        const response = await fetch(authUrl, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${bearerToken}`
+          }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          window.location.href = data; // Assuming the server responds with the authorization URL
+        } else {
+          console.error('Error:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
     }
-     })
-     .catch(error => {
-       // Hata durumunda mesaj göster
-       document.getElementById('login-error-message').innerText = 'Login failed: ' + error.message;
-     });
-  });
-
-function setSecureCookie(name, value, days) {
-  const expires = new Date();
-  expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
-  document.cookie = name + '=' + value + '; expires=' + expires.toUTCString() + '; path=/; secure; HttpOnly';
-}
-
-    function startTelegramAuth() {
-      const redirectUrl = `${window.location.origin}/connections/connect`;
-      // Retrieve the token from a secure storage mechanism (not localStorage)
-      const bearerToken = getSecureToken();
-        
-      const authUrl = `http://127.0.0.1:8000/connections/start_telegram_auth?redirect_url=${encodeURIComponent(redirectUrl)}`;
-        
-      fetch(authUrl, {
+    async function startTwitterAuth() {
+    const bearerToken = localStorage.getItem('bearerToken');
+    const authUrl = `http://127.0.0.1:8000/twitter/authorize-url`;
+    
+    try {
+      const response = await fetch(authUrl, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${bearerToken}`
         }
+      });
+    
+      if (response.ok) {
+        const data = await response.json();
+        window.location.href = data; // Assuming the server responds with the authorization URL
+      } else {
+        document.getElementById('twitter-error-message').innerText = 'Twitter connection failed: ' + response.statusText;
+      }
+    } catch (error) {
+      document.getElementById('twitter-error-message').innerText = 'An error occurred: ' + error.message;
+    }
+} 
+  
+      window.onload = function() {
+      const hash = window.location.hash.substring(1);
+      const hashParams = new URLSearchParams(hash);
+      const tgAuthResult = hashParams.get('tgAuthResult');
+      const token = new URLSearchParams(window.location.search).get('token');
+      const loginBearerToken = localStorage.getItem('bearerToken');
+
+      const url = new URL('http://127.0.0.1:8000/callback');
+      url.searchParams.append('token', token);
+      url.searchParams.append('tgAuthResult', tgAuthResult);
+
+      fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${loginBearerToken}`,
+          'Content-Type': 'application/json'
+        }
       })
       .then(response => response.json())
       .then(data => {
-        console.log(data);
-        // Handle response data
+        if (data.access_token) {
+          window.location.href = '/connections/connect';
+        } else {
+          document.getElementById('telegram-error-message').innerText = data.detail || 'Authentication failed.';
+        }
       })
       .catch(error => {
-        console.error('Error:', error);
+        document.getElementById('telegram-error-message').innerText = 'An error occurred: ' + error.message;
       });
-    }
-        // Check for Telegram auth result in the URL
-    window.onload = function() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const tgAuthResult = urlParams.get('tgAuthResult');
-
-      if (tgAuthResult) {
-        console.log('Telegram Auth Result:', tgAuthResult);
-        // Retrieve the login bearer token securely
-        const loginBearerToken = getSecureToken();
-      
-        fetch(`http://127.0.0.1:8000/connections/connect?tgAuthResult=${encodeURIComponent(tgAuthResult)}`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${loginBearerToken}`,
-            'Content-Type': 'application/json'
-          }
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.access_token) {
-            console.log('Access Token:', data.access_token);
-            // Redirect or handle the authenticated state
-            window.location.href = '/'; // Redirect to home page or other
-          } else {
-            document.getElementById('telegram-error-message').innerText = data.detail || 'Authentication failed.';
-          }
-        })
-        .catch(error => {
-          document.getElementById('telegram-error-message').innerText = 'An error occurred: ' + error.message;
-        });
-      }
     };
-  function getSecureToken() {
-    const tokenCookie = document.cookie.match(new RegExp('bearerToken=([^;]+)'));
-    if (tokenCookie) {
-      return tokenCookie[1];
-    }
-    return null; // Or handle the case where the token is not found
-  }
   </script>
 </body>
 </html>
