@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            color: #333;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px 0;
+            color: #fff;
+            background-color: #007BFF;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .social-buttons {
+            margin-top: 20px;
+        }
+        .social-buttons a {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            color: #fff;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .telegram-button {
+            background-color: #0088cc;
+        }
+        .telegram-button:hover {
+            background-color: #007ab8;
+        }
+        .twitter-button {
+            background-color: #1da1f2;
+        }
+        .twitter-button:hover {
+            background-color: #0d95e8;
+        }
+    </style>
+    
+</head>
+<body>
+    <div class="container">
+        <h1>Hoşgeldiniz, <span id="username">Kullanıcı Adı</span></h1>
+        <p>Burada, profil bilgilerinizi güncelleyebilir ve diğer işlemleri yapabilirsiniz.</p>
+
+        
+        <div class="social-buttons">
+            <a href="/connect-telegram" class="button telegram-button">Telegram Bağla</a>
+            <a href="/connect-twitter" class="button twitter-button">Twitter Bağla</a>
+        </div>
+        <a href="/profile.html" class="button">Profilimi Güncelle</a>
+        <a href="/" class="button" id="logout-button">Çıkış Yap</a>
+        <div class="invite-list">
+            <h2>Davetlerim</h2>
+            <div id="invites-container">
+                <!-- Davetler burada listelenecek -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        if (token) {
+            localStorage.setItem('bearerToken', token);
+        } else {
+            console.log('telegram muhabbeti.');
+        }
+        // localstrogade ki tokeni çözmek için
+        function parseJwt(token) {
+            const base64Url = token.split('.')[1];
+            const base64 = decodeURIComponent(atob(base64Url).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(base64);
+        }
+
+        function loadInvites() {
+            const token = localStorage.getItem('bearerToken');
+            
+            if (token) {
+                const decodedToken = parseJwt(token);
+                fetch('http://127.0.0.1:8000/user/getInvites', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const invitesContainer = document.getElementById('invites-container');
+                    if (Object.keys(data).length === 0) {
+                        invitesContainer.innerHTML += '<p>Davet bulunamadı.</p>';
+                        return;
+                    }
+                if (token) {
+                    fetch('http://127.0.0.1:8000/user/getInvites', {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        const invitesContainer = document.getElementById('invites-container');
+                    
+                        if (Object.keys(data).length === 0) {
+                            invitesContainer.innerHTML = '<p>Hiçbir davet bulunamadı.</p>';
+                            return;
+                        }
+                    
+                        const inviteElement = document.createElement('div');
+                        inviteElement.className = 'invite-item';
+                        inviteElement.innerHTML = `
+                            <p><strong>Organizasyon Adı:</strong> ${data.organization_name}</p>
+                            <p><strong>Durum:</strong> ${data.status}</p>
+                            <p><strong>Oluşturulma Tarihi:</strong> ${data.created_at}</p>
+                            <button class="accept-button">Kabul Et</button>
+                            <button class="reject-button">Reddet</button>
+                        `;
+                        invitesContainer.appendChild(inviteElement);
+                    
+                        // Kabul Et ve Reddet butonları için tıklama olayları
+                        const acceptButton = inviteElement.querySelector('.accept-button');
+                        const rejectButton = inviteElement.querySelector('.reject-button');
+
+                        acceptButton.addEventListener('click', () => {
+                            // Kabul etme işlemi
+                            status = 'approved';
+                            handleInvite(status, data.inviter_id);
+                        });
+                    
+                        rejectButton.addEventListener('click', () => {
+                            status = 'declined';
+                            handleInvite(status, data.inviter_id);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Davetler alınırken bir hata oluştu:', error);
+                    });
+                    } else {
+                        console.log('Token bulunamadı.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Davetler alınırken bir hata oluştu:', error);
+                });
+            } else {
+                console.log('Token bulunamadı.')
+                document.getElementById('username').textContent = 'Giriş Yapılmadı';
+            }
+        }
+        function handleInvite(status, inviterId) {
+            const token = localStorage.getItem('bearerToken');
+            console.log('handleInvite', status, inviterId);
+            fetch(`http://127.0.0.1:8000/organization/respond-invite?status=${status}&inviter_id=${inviterId}`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Davet kabul edildi.');
+                } else {
+                    alert('Davet kabul edilemedi.');
+                }
+            })
+            .catch(error => {
+                console.error('Davet kabul edilirken bir hata oluştu:', error);
+            });
+        }
+
+        //sayfa yüklendiğinde çalışacak fonksiyon
+        document.addEventListener('DOMContentLoaded', function() {
+            // localStorage'dan token'ı al
+            const token = localStorage.getItem('bearerToken');
+            
+            if (token) {
+                // Token'ı çözümle
+                const decodedToken = parseJwt(token);
+                // Kullanıcı adını sayfada göster
+                document.getElementById('username').textContent = decodedToken.username ;
+
+            } else {
+                console.log('Token bulunamadı.');
+                document.getElementById('username').textContent = 'Giriş Yapılmadı';
+            }
+            loadInvites();
+        });
+
+        function logout() {
+            localStorage.removeItem('bearerToken');
+            window.location.href = '/index.html';
+        }
+        document.getElementById('logout-button').addEventListener('click', function(event) {
+            event.preventDefault(); // Varsayılan tıklama davranışını engelle
+            logout(); // Çıkış yapma fonksiyonunu çağır
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p>döndü</p>
+   <script>
+        window.onload = async function() {
+        const hash = window.location.hash.substring(1);
+        const hashParams = new URLSearchParams(hash);
+        const tgAuthResult = hashParams.get('tgAuthResult');
+        const bearerToken = localStorage.getItem('bearerToken');
+        const authUrl=`http://127.0.0.1:8000/telegram/connect?tgAuthResult=${tgAuthResult}`;
+        try {
+        const response = await fetch(authUrl, {
+            method: 'GET',
+            headers: {
+            'Content-Type': 'application/json'
+            
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            localStorage.setItem('bearerToken', data);
+            window.location.href = '/anasayfa.html?token=' + data;
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error(`Error response: ${response.status} - ${errorText}`);
+        } else {
+            const data = await response.json();
+            console.log('Success:', data);
+        }
+        } catch (error) {
+            console.error('Fetch error:', error);
+        }
+    };
+   </script> 
+</body>
+</html>

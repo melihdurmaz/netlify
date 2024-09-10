@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Sayfası</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .profile-info {
+            margin-top: 20px;
+        }
+        .profile-info p {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Profil Sayfası</h1>
+        <div class="profile-info">
+            <p><strong>Ad:</strong> <span id="username"></span></p>
+            <p><strong>E-posta:</strong> <span id="email"></span></p>
+            <p><strong>Organizasyon:</strong> <span id="organization_name"></span></p>
+            <p><strong>Kayıt Tarihi:</strong> <span id="created_at"></span></p>
+        </div>
+        <a href="#" class="button" id="logout-button">Çıkış Yap</a>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const token = localStorage.getItem('bearerToken');
+            if (!token) {
+                alert('Lütfen giriş yapın.');
+                window.location.href = '/index.html'; // Login sayfasına yönlendir
+            } else {
+                fetchProfileData(token);
+            }
+
+            function fetchProfileData(token) {
+                fetch('http://127.0.0.1:8000/user/profile', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('username').textContent = data.username;
+                    document.getElementById('email').textContent = data.email;
+                    document.getElementById('organization_name').textContent = data.organization_name;
+                    document.getElementById('created_at').textContent = new Date(data.created_at).toLocaleDateString();
+
+                })
+                .catch(error => {
+                    console.error('Kullanıcı bilgileri alınırken bir hata oluştu:', error);
+                    alert('Kullanıcı bilgileri alınamadı. Lütfen tekrar giriş yapın.');
+                    window.location.href = '/index.html'; // Login sayfasına yönlendir
+                });
+            }
+
+            document.getElementById('logout-button').addEventListener('click', function() {
+                localStorage.removeItem('bearerToken');
+                window.location.href = '/index.html'; // Login sayfasına yönlendir
+            });
+        });
+    </script>
+</body>
+</html>

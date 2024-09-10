@@ -1,0 +1,107 @@
+    // async function startTelegramProcess() {
+    //   const bearerToken = localStorage.getItem('bearerToken');
+    //   const startUrl = 'http://127.0.0.1:8000/telegrambot/open';
+
+    //   try {
+    //     const response = await fetch(startUrl, {
+    //       method: 'GET',
+    //       headers: {
+    //         'Authorization': `Bearer ${bearerToken}`,
+    //         'Content-Type': 'application/json'
+    //       }
+    //     });
+      
+    //     if (response.ok) {
+    //       const data = await response.json();
+    //       window.location.href = data;
+
+    //       document.getElementById('telegram-start-error-message').innerText = 'Telegram process started successfully: ' + JSON.stringify(data);
+    //     } else {
+    //       document.getElementById('telegram-start-error-message').innerText = 'Telegram process failed: ' + response.statusText;
+    //     }
+    //   } catch (error) {
+    //     document.getElementById('telegram-start-error-message').innerText = 'An error occurred: ' + error.message;
+    //   }
+    // }
+
+
+
+
+    // async function startTelegramAuth() {
+    //   const bearerToken = localStorage.getItem('bearerToken');
+    //   const authUrl = `http://127.0.0.1:8000/telegram/authorize-url`;
+    //   try {
+    //     const response = await fetch(authUrl, {
+    //       method: 'GET',
+    //       headers: {
+    //         'Authorization': `Bearer ${bearerToken}`
+    //       }
+    //     });
+
+      
+    //     if (response.ok) {
+    //       const data = await response.json();
+    //       window.location.href = data.url; 
+    //     } else {
+    //       document.getElementById('telegram-error-message').innerText = 'Telegram connection failed: ' + response.statusText;
+    //     }
+    //   } catch (error) {
+    //     document.getElementById('telegram-error-message').innerText = 'An error occurred: ' + error.message;
+    //   }
+    // }
+
+
+
+        //     window.onload = async function() {
+    //     const hash = window.location.hash.substring(1);
+    //     const hashParams = new URLSearchParams(hash);
+    //     const tgAuthResult = hashParams.get('tgAuthResult');
+    //     const authUrl=`http://127.0.0.1:8000/telegram/connect?tgAuthResult=${tgAuthResult}`;
+    //     try {
+    //     const response = await fetch(authUrl, {
+    //         method: 'GET',
+    //         headers: {
+    //         'Content-Type': 'application/json'
+    //         },
+    //     })
+    //     .then(response => response.json())
+    //     .then(data => {
+    //       localStorage.setItem('bearerToken', data);
+    //     });
+
+    //     if (!response.ok) {
+    //         const errorText = await response.text();
+    //         console.error(`Error response: ${response.status} - ${errorText}`);
+    //     } else {
+    //         const data = await response.json();
+    //         console.log('Success:', data);
+    //     }
+    //     } catch (error) {
+    //         console.error('Fetch error:', error);
+    //     }
+    // };
+
+
+
+
+        // async function connectTelegram() {
+    //   const bearerToken = localStorage.getItem('bearerToken');
+    //   console.log(localStorage.getItem('bearerToken'));
+    //   const authUrl = `http://127.0.0.1:8000/telegram/login`;
+    //   try {
+    //     const response = await fetch(authUrl, {
+    //       method: 'GET',
+    //       headers: {
+    //         'Authorization': `Bearer ${bearerToken}`
+    //       }
+    //     });
+    //     if (response.ok) {
+    //       const data = await response.json();
+    //       window.location.href = data.url; 
+    //     } else {
+    //       document.getElementById('telegram-error-message').innerText = 'Telegram connection failed: ' + response.statusText;
+    //     }
+    //   } catch (error) {
+    //     document.getElementById('telegram-error-message').innerText = 'An error occurred: ' + error.message;
+    //   }
+    // }
