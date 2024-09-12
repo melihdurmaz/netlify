@@ -1,226 +1,284 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>    
+    <title>Document</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
         }
+
         .container {
-            width: 80%;
-            margin: 0 auto;
+            max-width: 800px;
+            margin: 50px auto;
             padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
+
+        .hidden {
+            display: none;
+        }
+
         h1 {
             color: #333;
         }
+
         .button {
             display: inline-block;
-            padding: 10px 20px;
             margin: 10px 0;
-            color: #fff;
-            background-color: #007BFF;
-            text-decoration: none;
+            padding: 12px 20px;
+            color: white;
+            background-color: #007bff;
+            border: none;
             border-radius: 5px;
+            text-decoration: none;
             font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
+
         .button:hover {
             background-color: #0056b3;
         }
-        .social-buttons {
-            margin-top: 20px;
-        }
-        .social-buttons a {
-            display: inline-block;
-            padding: 10px 20px;
-            margin: 10px;
-            color: #fff;
-            border-radius: 5px;
-            text-decoration: none;
-            font-size: 16px;
-        }
-        .telegram-button {
-            background-color: #0088cc;
-        }
-        .telegram-button:hover {
-            background-color: #007ab8;
-        }
+
         .twitter-button {
             background-color: #1da1f2;
         }
+
         .twitter-button:hover {
-            background-color: #0d95e8;
+            background-color: #1a91da;
+        }
+
+        #logout-button {
+            background-color: #dc3545;
+        }
+
+        #logout-button:hover {
+            background-color: #c82333;
+        }
+
+        .invite-list h2 {
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        #invites-container {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        #verification-container {
+            margin-top: 20px;
+        }
+
+        .verification-button {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .verification-button:hover {
+            background-color: #218838;
         }
     </style>
-    
+
 </head>
+
 <body>
     <div class="container">
         <h1>Hoşgeldiniz, <span id="username">Kullanıcı Adı</span></h1>
         <p>Burada, profil bilgilerinizi güncelleyebilir ve diğer işlemleri yapabilirsiniz.</p>
 
-        
+
         <div class="social-buttons">
-            <a href="/connect-telegram" class="button telegram-button">Telegram Bağla</a>
-            <a href="/connect-twitter" class="button twitter-button">Twitter Bağla</a>
+            <!-- <div class="container">
+                <div class="popup-note">
+                    <p>login telegram</p>
+                </div>
+                <button class="button" onclick="startTelegramLogin()">Login</button>
+                <div id="telegram-error-message"></div>
+            </div> -->
+            <button id="twitter-button" class="twitter-button" onclick="startTwitterConnect()">Twitter Bağla</button>
         </div>
         <a href="/profile.html" class="button">Profilimi Güncelle</a>
         <a href="/" class="button" id="logout-button">Çıkış Yap</a>
+        <div>
+            <button id="davet-button" class="button" onclick="createurl()">
+                <p>davet kodu oluştur</p>
+            </button>
+        </div>
         <div class="invite-list">
             <h2>Davetlerim</h2>
             <div id="invites-container">
                 <!-- Davetler burada listelenecek -->
             </div>
         </div>
+        <div id="verification-container">
+        </div>
     </div>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get('token');
-        if (token) {
-            localStorage.setItem('bearerToken', token);
-        } else {
-            console.log('telegram muhabbeti.');
-        }
         // localstrogade ki tokeni çözmek için
         function parseJwt(token) {
             const base64Url = token.split('.')[1];
-            const base64 = decodeURIComponent(atob(base64Url).split('').map(function(c) {
+            const base64 = decodeURIComponent(atob(base64Url).split('').map(function (c) {
                 return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
             }).join(''));
             return JSON.parse(base64);
         }
-
-        function loadInvites() {
+        function load() {
             const token = localStorage.getItem('bearerToken');
-            
             if (token) {
-                const decodedToken = parseJwt(token);
-                fetch('http://127.0.0.1:8000/user/getInvites', {
+                fetch(`http://127.0.0.1:8000/user/check-verified`, {
                     method: 'GET',
                     headers: {
-                        'Authorization': `Bearer ${token}`
+                        'Authorization': `Bearer ${token}`,
                     }
                 })
-                .then(response => response.json())
-                .then(data => {
-                    const invitesContainer = document.getElementById('invites-container');
-                    if (Object.keys(data).length === 0) {
-                        invitesContainer.innerHTML += '<p>Davet bulunamadı.</p>';
-                        return;
-                    }
-                if (token) {
-                    fetch('http://127.0.0.1:8000/user/getInvites', {
-                        method: 'GET',
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        }
-                    })
                     .then(response => response.json())
                     .then(data => {
-                        const invitesContainer = document.getElementById('invites-container');
-                    
-                        if (Object.keys(data).length === 0) {
-                            invitesContainer.innerHTML = '<p>Hiçbir davet bulunamadı.</p>';
-                            return;
-                        }
-                    
-                        const inviteElement = document.createElement('div');
-                        inviteElement.className = 'invite-item';
-                        inviteElement.innerHTML = `
-                            <p><strong>Organizasyon Adı:</strong> ${data.organization_name}</p>
-                            <p><strong>Durum:</strong> ${data.status}</p>
-                            <p><strong>Oluşturulma Tarihi:</strong> ${data.created_at}</p>
-                            <button class="accept-button">Kabul Et</button>
-                            <button class="reject-button">Reddet</button>
-                        `;
-                        invitesContainer.appendChild(inviteElement);
-                    
-                        // Kabul Et ve Reddet butonları için tıklama olayları
-                        const acceptButton = inviteElement.querySelector('.accept-button');
-                        const rejectButton = inviteElement.querySelector('.reject-button');
+                        const container = document.getElementById('verification-container');
+                        if (data == false) {
+                            alert('Hesabınız onaylanmamıştır. Lütfen onaylayınız.');
+                            const verifyButton = document.createElement('button');
+                            verifyButton.textContent = 'Verifiy Et';
+                            verifyButton.className = 'verification-button'; // CSS sınıfı eklenir
 
-                        acceptButton.addEventListener('click', () => {
-                            // Kabul etme işlemi
-                            status = 'approved';
-                            handleInvite(status, data.inviter_id);
-                        });
-                    
-                        rejectButton.addEventListener('click', () => {
-                            status = 'declined';
-                            handleInvite(status, data.inviter_id);
-                        });
+                            // Buton 'verification-container' div'ine eklenir
+                            const verificationContainer = document.getElementById('verification-container');
+                            verificationContainer.appendChild(verifyButton);
+                            verifyButton.onclick = () => {
+
+                                fetch(`http://localhost:8000/telegrambot/send-message`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Authorization': `Bearer ${token}`,
+                                    }
+                                })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        window.location.href = data;
+                                    })
+                                    .catch(error => {
+                                        console.error('Davet kabul edilirken bir hata oluştu:', error);
+                                    });
+                            }
+
+                            // Daha önce eklenmiş olabilecek butonları temizle
+                            container.innerHTML = '';
+                            container.appendChild(verifyButton);
+                        }
+                        else {
+                            alert('Hesabınız onaylanmıştır.');
+                        }
                     })
                     .catch(error => {
-                        console.error('Davetler alınırken bir hata oluştu:', error);
+                        console.error('Davet kabul edilirken bir hata oluştu:', error);
                     });
-                    } else {
-                        console.log('Token bulunamadı.');
+
+                fetch('http://127.0.0.1:8000/user/profile', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
                     }
-                })
-                .catch(error => {
-                    console.error('Davetler alınırken bir hata oluştu:', error);
-                });
-            } else {
-                console.log('Token bulunamadı.')
-                document.getElementById('username').textContent = 'Giriş Yapılmadı';
+                }).then(response => response.json())
+                    .then(data => {
+                        const button = document.getElementById('twitter-button');
+                        if (data.twitter.username) {
+
+                            button.classList.add('hidden');
+                        }
+                        else {
+                            button.classList.remove('hidden');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Kullanıcı bilgileri alınırken bir hata oluştu:', error);
+
+                    });
+
             }
         }
-        function handleInvite(status, inviterId) {
-            const token = localStorage.getItem('bearerToken');
-            console.log('handleInvite', status, inviterId);
-            fetch(`http://127.0.0.1:8000/organization/respond-invite?status=${status}&inviter_id=${inviterId}`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                }
-            })
-            .then(response => {
-                if (response.ok) {
-                    alert('Davet kabul edildi.');
-                } else {
-                    alert('Davet kabul edilemedi.');
-                }
-            })
-            .catch(error => {
-                console.error('Davet kabul edilirken bir hata oluştu:', error);
-            });
-        }
-
         //sayfa yüklendiğinde çalışacak fonksiyon
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // localStorage'dan token'ı al
             const token = localStorage.getItem('bearerToken');
-            
+
             if (token) {
                 // Token'ı çözümle
                 const decodedToken = parseJwt(token);
                 // Kullanıcı adını sayfada göster
-                document.getElementById('username').textContent = decodedToken.username ;
+                document.getElementById('username').textContent = decodedToken.username;
 
             } else {
-                console.log('Token bulunamadı.');
-                document.getElementById('username').textContent = 'Giriş Yapılmadı';
+                const urlParams = new URLSearchParams(window.location.search);
+                const token = urlParams.get('token');
+                if (token) {
+                    localStorage.setItem('bearerToken', token);
+                } else {
+                    alert('Lütfen giriş yapın.');
+                    window.location.href = '/index.html';
+                }
             }
-            loadInvites();
-        });
+            load();
+            // loadInvites();
+            
 
+        });
+        async function startTwitterConnect() {
+            const token = localStorage.getItem('bearerToken');
+            const authUrl = `http://127.0.0.1:8000/twitter/authorize-url`;
+            try {
+                const response = await fetch(authUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    window.location.href = data; // Assuming the server responds with the authorization URL
+                } else {
+                    document.getElementById('twitter-error-message').innerText = 'Twitter connection failed: ' + response.statusText;
+                }
+            } catch (error) {
+                document.getElementById('twitter-error-message').innerText = 'An error occurred: ' + error.message;
+            }
+        }
+        function createurl() {
+            console.log('createurl');
+            const token = localStorage.getItem('bearerToken');
+            const decodedToken=parseJwt(token);
+            const url = `http://127.0.0.1:8000/telegram/register?ref=${decodedToken.id}`;
+            navigator.clipboard.writeText(url);
+        }        
         function logout() {
             localStorage.removeItem('bearerToken');
             window.location.href = '/index.html';
         }
-        document.getElementById('logout-button').addEventListener('click', function(event) {
+        document.getElementById('logout-button').addEventListener('click', function (event) {
             event.preventDefault(); // Varsayılan tıklama davranışını engelle
             logout(); // Çıkış yapma fonksiyonunu çağır
         });
     </script>
 </body>
+
 </html>

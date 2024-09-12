@@ -1,45 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Authentication</title>
   <style>
     body {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      background-color: rgba(0, 0, 0, 0.5);
-      margin: 0;
       font-family: Arial, sans-serif;
-      color: #fff;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
+
     .container {
-      background-color: #242424;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       padding: 20px;
-      border-radius: 10px;
       text-align: center;
-      margin: 10px;
+      margin: 20px;
+      width: 250px;
     }
-    .button {
-      background-color: #FFDA68;
-      color: #151515;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 10px;
-      cursor: pointer;
+
+    .popup-note p {
+      color: #333;
       font-size: 16px;
-      margin-top: 20px;
+      margin-bottom: 20px;
     }
+
+    .button {
+      display: inline-block;
+      padding: 12px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      text-decoration: none;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      width: 100%;
+    }
+
     .button:hover {
-      opacity: 0.8;
+      background-color: #0056b3;
     }
-    .popup-note {
-      margin-bottom: 10px;
+
+    a {
+      color: white;
+      text-decoration: none;
+    }
+
+    #telegram-error-message {
+      margin-top: 10px;
+      color: #dc3545;
     }
   </style>
 </head>
+
 <body>
   <!-- <div class="container">
     <div class="popup-note">
@@ -50,101 +73,81 @@
   </div> -->
   <div class="container">
     <div class="popup-note">
-      <p>Connect to Twitter</p>
+      <a href="/manager.html"><p>Connect to Manager</p></a>
     </div>
-    <button class="button" onclick="startTwitterAuth()">Login</button>
-    <div id="twitter-error-message"></div>
+    
   </div>
+
   <div class="container">
     <div class="popup-note">
-      <p>login telegram</p>
+      <p>Login Telegram</p>
     </div>
     <button class="button" onclick="startTelegramLogin()">Login</button>
     <div id="telegram-error-message"></div>
   </div>
-  <div class="container">
-    <div class="popup-note">
-      <p>Loginn</p>
-    </div>
-    <form id="login-form">
-      <input type="text" id="username" placeholder="Username" required>
-      <input type="password" id="password" placeholder="Password" required>
-      <button type="submit" class="button">Login</button>
-    </form>
-    <div id="login-error-message"></div>
-  </div>
-  <div class="container">
-    <div class="popup-note">
-      <p>regiter</p>
-    </div>
-    <form id="register-form">
-      <input type="text" id="register_username" placeholder="Username" required>
-      <input type="password" id="register_password" placeholder="Password" required>
-      <button type="submit" class="button">Register</button>
-    </form>
-    <div id="login-error-message"></div>
-  </div>
+
   <!-- <div class="container">
     <div class="popup-note">
-      <p>Start Telegram</p>
+      <p>Telegram register</p>
     </div>
     <button class="button" onclick="startTelegramProcess()">Start Telegram</button>
     <div id="telegram-start-error-message"></div>
   </div> -->
-  
+
+
   <script>
-    document.getElementById('register-form').addEventListener('submit', function(event) {
-      event.preventDefault();
+    // document.getElementById('register-form').addEventListener('submit', function (event) {
+    //   event.preventDefault();
 
-      const email = document.getElementById('register_username').value;
-      const password = document.getElementById('register_password').value;
+    //   const email = document.getElementById('register_username').value;
+    //   const password = document.getElementById('register_password').value;
 
-      fetch('http://127.0.0.1:8000/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email: email, password: password })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (typeof data === 'string') {
-          localStorage.setItem('bearerToken', data);
-          window.location.href = '/anasayfa';
-        } else {
-          document.getElementById('login-error-message').innerText = 'Login failed: ' + (data.error || 'Unknown error');
-        }
-      })
-      .catch(error => {
-        document.getElementById('login-error-message').innerText = 'Login failed: ' + error.message;
-      });
-    });
-    document.getElementById('login-form').addEventListener('submit', function(event) {
-      event.preventDefault();
+    //   fetch('http://127.0.0.1:8000/auth/register', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify({ email: email, password: password })
+    //   })
+    //     .then(response => response.json())
+    //     .then(data => {
+    //       if (typeof data === 'string') {
+    //         localStorage.setItem('bearerToken', data);
+    //         window.location.href = '/anasayfa.html';
+    //       } else {
+    //         document.getElementById('login-error-message').innerText = 'Login failed: ' + (data.error || 'Unknown error');
+    //       }
+    //     })
+    //     .catch(error => {
+    //       document.getElementById('login-error-message').innerText = 'Login failed: ' + error.message;
+    //     });
+    // });
+    // document.getElementById('login-form').addEventListener('submit', function (event) {
+    //   event.preventDefault();
 
-      const email = document.getElementById('username').value;
-      const password = document.getElementById('password').value;
+    //   const email = document.getElementById('username').value;
+    //   const password = document.getElementById('password').value;
 
-      fetch('http://127.0.0.1:8000/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email: email, password: password })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (typeof data === 'string') {
-          localStorage.setItem('bearerToken', data);
-          window.location.href = '/anasayfa.html';
-        } else {
-          document.getElementById('login-error-message').innerText = 'Login failed: ' + (data.error || 'Unknown error');
-        }
-      })
-      .catch(error => {
-        document.getElementById('login-error-message').innerText = 'Login failed: ' + error.message;
-      });
-    });
+    //   fetch('http://127.0.0.1:8000/auth/login', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify({ email: email, password: password })
+    //   })
+    //     .then(response => response.json())
+    //     .then(data => {
+    //       if (typeof data === 'string') {
+    //         localStorage.setItem('bearerToken', data);
+    //         window.location.href = '/anasayfa.html';
+    //       } else {
+    //         document.getElementById('login-error-message').innerText = 'Login failed: ' + (data.error || 'Unknown error');
+    //       }
+    //     })
+    //     .catch(error => {
+    //       document.getElementById('login-error-message').innerText = 'Login failed: ' + error.message;
+    //     });
+    // });
 
     async function startTelegramLogin() {
       const authUrl = `http://127.0.0.1:8000/telegram/login`;
@@ -154,32 +157,34 @@
         });
         if (response.ok) {
           const data = await response.json();
-          window.location.href = data.url; 
+          console.log(data.url);
+          window.location.href = data.url;
         } else {
           document.getElementById('telegram-error-message').innerText = 'Telegram connection failed: ' + response.statusText;
         }
       } catch (error) {
         document.getElementById('telegram-error-message').innerText = 'An error occurred: ' + error.message;
       }
-      
+
     }
-    async function startTwitterAuth() {
-      const authUrl = `http://127.0.0.1:8000/twitter/authorize-url`;
-      try {
-        const response = await fetch(authUrl, {
-          method: 'GET',
-        });
-      
-        if (response.ok) {
-          const data = await response.json();
-          window.location.href = data; // Assuming the server responds with the authorization URL
-        } else {
-          document.getElementById('twitter-error-message').innerText = 'Twitter connection failed: ' + response.statusText;
-        }
-      } catch (error) {
-        document.getElementById('twitter-error-message').innerText = 'An error occurred: ' + error.message;
-      }
-    } 
+    // async function startTwitterAuth() {
+    //   const authUrl = `http://127.0.0.1:8000/twitter/authorize-url`;
+    //   try {
+    //     const response = await fetch(authUrl, {
+    //       method: 'GET',
+    //     });
+
+    //     if (response.ok) {
+    //       const data = await response.json();
+    //       window.location.href = data; // Assuming the server responds with the authorization URL
+    //     } else {
+    //       document.getElementById('twitter-error-message').innerText = 'Twitter connection failed: ' + response.statusText;
+    //     }
+    //   } catch (error) {
+    //     document.getElementById('twitter-error-message').innerText = 'An error occurred: ' + error.message;
+    //   }
+    // }
 
   </script>
+
 </html>
