@@ -17,7 +17,7 @@ function loadEmploye() {
         })
             .then(response => response.json())
             .then(data => {
-                console.log(data);
+
                 const employeContainer = document.getElementById('employee-container');
 
                 // Tabloyu oluşturma
@@ -49,7 +49,7 @@ function loadEmploye() {
             })
 
     } else {
-        console.log('token yok');
+
         document.getElementById('username').textContent = 'Giriş Yapılmadı';
     }
 }

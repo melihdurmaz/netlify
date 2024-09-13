@@ -63,7 +63,7 @@ function load() {
         }).then(response => response.json())
             .then(data => {
                 const button = document.getElementById('twitter-button');
-                if (data.twitter.username) {
+                if (data.twitter) {
 
                     button.classList.add('hidden');
                 }
@@ -82,7 +82,6 @@ function load() {
 document.addEventListener('DOMContentLoaded', function () {
     // localStorage'dan token'ı al
     const token = localStorage.getItem('bearerToken');
-    console.log(token);
 
     if (token) {
         // Token'ı çözümle
@@ -114,7 +113,6 @@ async function startTwitterConnect() {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
-
             }
         });
 
@@ -129,7 +127,6 @@ async function startTwitterConnect() {
     }
 }
 function createurl() {
-    console.log('createurl');
     const token = localStorage.getItem('bearerToken');
     const decodedToken = parseJwt(token);
     const url = `http://127.0.0.1:8000/telegram/register?ref=${decodedToken.id}`;

@@ -157,7 +157,6 @@
         });
         if (response.ok) {
           const data = await response.json();
-          console.log(data.url);
           window.location.href = data.url;
         } else {
           document.getElementById('telegram-error-message').innerText = 'Telegram connection failed: ' + response.statusText;

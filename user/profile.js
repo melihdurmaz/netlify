@@ -1,27 +1,28 @@
-
-document.getElementById('change-password-button').addEventListener('click', function () {
-    if (confirm('şifrenizi değiştirmek istediğinizden emin misiniz?')) {
-        const token = localStorage.getItem('bearerToken');
-        fetch('http://127.0.0.1:8000/auth/chance-password', {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(response => {
-                if (response.ok) {
-                    alert('mail adresinize şifre değiştirme bağlantısı gönderildi.');
-                } else {
-                    alert('mail adresinize şifre değiştirme bağlantısı gönderilemedi.');
-                }
-            })
-            .catch(error => {
-                console.error('Hesap silinirken bir hata oluştu:', error);
-                alert('Hesap silinirken bir hata oluştu. Lütfen tekrar deneyin.');
-            });
-    }
-});
+const token = localStorage.getItem('bearerToken');
+console.log(token);
+// document.getElementById('change-password-button').addEventListener('click', function () {
+//     if (confirm('şifrenizi değiştirmek istediğinizden emin misiniz?')) {
+//         const token = localStorage.getItem('bearerToken');
+//         fetch('http://127.0.0.1:8000/auth/chance-password', {
+//             method: 'GET',
+//             headers: {
+//                 'Authorization': `Bearer ${token}`,
+//                 'Content-Type': 'application/json'
+//             }
+//         })
+//             .then(response => {
+//                 if (response.ok) {
+//                     alert('mail adresinize şifre değiştirme bağlantısı gönderildi.');
+//                 } else {
+//                     alert('mail adresinize şifre değiştirme bağlantısı gönderilemedi.');
+//                 }
+//             })
+//             .catch(error => {
+//                 console.error('Hesap silinirken bir hata oluştu:', error);
+//                 alert('Hesap silinirken bir hata oluştu. Lütfen tekrar deneyin.');
+//             });
+//     }
+// });
 
 
 document.getElementById('delete-account-button').addEventListener('click', function () {

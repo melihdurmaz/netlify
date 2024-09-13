@@ -19,8 +19,6 @@
             
             const urlParams = new URLSearchParams(window.location.search);
             const ref = urlParams.get('ref'); // "ref" parametresini al
-            console.log(ref);
-            console.log(bearerToken);
             const authUrl = `http://127.0.0.1:8000/telegram/connect-ref?tgAuthResult=${tgAuthResult}&ref=${ref}`;
             try {
                 const response = await fetch(authUrl, {

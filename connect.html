@@ -13,7 +13,7 @@
         const hashParams = new URLSearchParams(hash);
         const tgAuthResult = hashParams.get('tgAuthResult');
         const bearerToken = localStorage.getItem('bearerToken');
-        console.log(bearerToken);
+
         const authUrl=`http://127.0.0.1:8000/telegram/connect?tgAuthResult=${tgAuthResult}`;
         try {
         const response = await fetch(authUrl, {
@@ -26,17 +26,15 @@
         })
         .then(response => response.json())
         .then(data => {
-            console.log('Success:', data);
             localStorage.setItem('bearerToken', data);
-            window.location = 'https://main--mellifluous-axolotl-46dfb9.netlify.app/user/anasayfa';
+            window.location = '/user/anasayfa.html';
         });
 
         if (!response.ok) {
             const errorText = await response.text();
             console.error(`Error response: ${response.status} - ${errorText}`);
         } else {
-            const data = await response.json();
-            console.log('Success:', data);
+
         }
         } catch (error) {
             console.error('Fetch error:', error);
