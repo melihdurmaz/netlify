@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="manager.css">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Twitter Bağlantı Kısmı -->
+        <!-- <div class="popup-note">
+        <p>Connect to Twitter</p>
+    </div>
+    <button class="button" onclick="startTwitterAuth()">Login</button>
+    <div id="twitter-error-message"></div>
+    </div> -->
+
+        <!-- Telegram Giriş Kısmı -->
+        <!-- <div class="container">
+        <div class="popup-note">
+            <p>Login Telegram</p>
+        </div>
+        <button class="button" onclick="startTelegramLogin()">Login</button>
+        <div id="telegram-error-message"></div>
+    </div> -->
+
+        <!-- Giriş Kısmı -->
+        <div class="container">
+            <div class="popup-note">
+                <p>Login</p>
+            </div>
+            <form id="login-form">
+                <input type="text" id="username" placeholder="Username" required>
+                <input type="password" id="password" placeholder="Password" required>
+                <button type="submit" class="button">Login</button>
+            </form>
+            <div id="login-error-message"></div>
+        </div>
+
+        <!-- Kayıt Kısmı -->
+        <div class="container">
+            <div class="popup-note">
+                <p>Register</p>
+            </div>
+            <form id="register-form">
+                <input type="email" id="register_email" placeholder="Email" required>
+                <input type="text" id="register_name" placeholder="Name" required>
+                <input type="password" id="register_password" placeholder="Password" required>
+                <button type="submit" class="button">Register</button>
+            </form>
+            <div id="login-error-message"></div>
+        </div>
+
+    </div>
+    <script src="manager.js"></script>
+</body>
+
+</html>

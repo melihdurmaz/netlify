@@ -1,0 +1,64 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+h1 {
+    color: #333;
+}
+
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 10px 0;
+    color: #fff;
+    background-color: #007BFF;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+.social-buttons {
+    margin-top: 20px;
+}
+
+.social-buttons a {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 10px;
+    color: #fff;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.telegram-button {
+    background-color: #0088cc;
+}
+
+.telegram-button:hover {
+    background-color: #007ab8;
+}
+
+.twitter-button {
+    background-color: #1da1f2;
+}
+
+.twitter-button:hover {
+    background-color: #0d95e8;
+}

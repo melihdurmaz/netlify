@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/user/anasayfa.css">
+
+</head>
+
+<body>
+    <div class="container">
+        <h1>Hoşgeldiniz, <span id="username">Kullanıcı Adı</span></h1>
+        <p>Burada, profil bilgilerinizi güncelleyebilir ve diğer işlemleri yapabilirsiniz.</p>
+
+
+        <div class="social-buttons">
+            <!-- <div class="container">
+                <div class="popup-note">
+                    <p>login telegram</p>
+                </div>
+                <button class="button" onclick="startTelegramLogin()">Login</button>
+                <div id="telegram-error-message"></div>
+            </div> -->
+            <button id="twitter-button" class="twitter-button" onclick="startTwitterConnect()">Twitter Bağla</button>
+        </div>
+        <a href="/profile.html" class="button">Profilimi Güncelle</a>
+        <a href="/" class="button" id="logout-button">Çıkış Yap</a>
+        <div>
+            <button id="davet-button" class="button" onclick="createurl()">
+                <p>davet kodu oluştur</p>
+            </button>
+        </div>
+        <div class="invite-list">
+            <h2>Davetlerim</h2>
+            <div id="invites-container">
+                <!-- Davetler burada listelenecek -->
+            </div>
+        </div>
+        <div id="verification-container">
+        </div>
+    </div>
+
+   
+</body>
+
+</html>
