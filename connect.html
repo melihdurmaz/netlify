@@ -28,7 +28,7 @@
         .then(data => {
             console.log('Success:', data);
             localStorage.setItem('bearerToken', data);
-            window.location.href = '/user/anasayfa.html';
+            window.location = 'https://main--mellifluous-axolotl-46dfb9.netlify.app/user/anasayfa';
         });
 
         if (!response.ok) {
