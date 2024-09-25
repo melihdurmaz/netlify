@@ -39,7 +39,26 @@
             </form>
             <div id="login-error-message"></div>
         </div>
-
+        <h1>Kamera Görüntüsü</h1>
+        <video id="video" width="640" height="480" autoplay></video>
+        <script>
+            // Tarayıcıdan video akışını alıp video elementine bağlar
+            function startCamera() {
+                const video = document.getElementById('video');
+        
+                // Tarayıcıda kamera erişimi isteği
+                navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function (stream) {
+                    video.srcObject = stream;
+                })
+                .catch(function (err) {
+                    console.error("Kamera açma hatası: ", err);
+                });
+            }
+        
+            // Sayfa yüklendiğinde kamerayı aç
+            window.onload = startCamera;
+        </script>
         <!-- Kayıt Kısmı -->
         <div class="container">
             <div class="popup-note">
