@@ -1,4 +1,20 @@
+.flex-container {
+    display: flex;
+    flex-wrap: wrap; /* Satır taşarsa yeni satıra geçmesini sağlar */
+    gap: 20px; /* Projeler arasında boşluk bırakır */
+}
 
+.project {
+    background-color: #f4f4f4;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 200px; /* Her bir projenin genişliği */
+}
+
+.project h3 {
+    margin-top: 0;
+}
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f9;

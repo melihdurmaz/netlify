@@ -1,4 +1,24 @@
-
+window.onload = function () {
+    fetch('http://127.0.0.1:8000/organization/projects', {
+        method: 'GET',
+    })
+    .then(response => response.json())
+    .then(data => {
+        const container = document.getElementById('projects-container');
+        data.forEach(project => {
+            const projectDiv = document.createElement('div');
+            projectDiv.classList.add('project');
+            projectDiv.innerHTML = `
+            <a href="/project/home.html?id=${project.project_id}"><h3>${project.project_name}</h3></a>
+            <p>Durum: ${project.project_status ? 'Aktif' : 'Pasif'}</p>
+        `;
+            container.appendChild(projectDiv);
+        });
+    })
+    .catch(error => {
+        console.error('Projeler alınırken hata oluştu:', error);
+    });
+};
 // localstrogade ki tokeni çözmek için
 function parseJwt(token) {
     const base64Url = token.split('.')[1];

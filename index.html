@@ -64,13 +64,13 @@
 </head>
 
 <body>
-  <!-- <div class="container">
+  <div class="container">
     <div class="popup-note">
-      <p>Connect to Telegram</p>
+      <p>Login twitter</p>
     </div>
-    <button class="button" onclick="connectTelegram()">Connect</button>
+    <button class="button" onclick="connectTwitter()">Login</button>
     <div id="telegram-error-message"></div>
-  </div> -->
+  </div>
   <div class="container">
     <div class="popup-note">
       <a href="/manager/login/manager.html"><p>Connect to Manager</p></a>
@@ -85,6 +85,8 @@
     <button class="button" onclick="startTelegramLogin()">Login</button>
     <div id="telegram-error-message"></div>
   </div>
+  <h1>Kamera Görüntüsü</h1>
+    <video id="video" width="640" height="480" autoplay></video>
 
   <!-- <div class="container">
     <div class="popup-note">
@@ -94,7 +96,24 @@
     <div id="telegram-start-error-message"></div>
   </div> -->
 
+  <script>
+    // Tarayıcıdan video akışını alıp video elementine bağlar
+    function startCamera() {
+        const video = document.getElementById('video');
 
+        // Tarayıcıda kamera erişimi isteği
+        navigator.mediaDevices.getUserMedia({ video: true })
+        .then(function (stream) {
+            video.srcObject = stream;
+        })
+        .catch(function (err) {
+            console.error("Kamera açma hatası: ", err);
+        });
+    }
+
+    // Sayfa yüklendiğinde kamerayı aç
+    window.onload = startCamera;
+</script>
   <script>
     // document.getElementById('register-form').addEventListener('submit', function (event) {
     //   event.preventDefault();
@@ -166,23 +185,23 @@
       }
 
     }
-    // async function startTwitterAuth() {
-    //   const authUrl = `http://127.0.0.1:8000/twitter/authorize-url`;
-    //   try {
-    //     const response = await fetch(authUrl, {
-    //       method: 'GET',
-    //     });
+    async function connectTwitter() {
+      const authUrl = `http://127.0.0.1:8000/twitter/login-twitter`;
+      try {
+        const response = await fetch(authUrl, {
+          method: 'GET',
+        });
 
-    //     if (response.ok) {
-    //       const data = await response.json();
-    //       window.location.href = data; // Assuming the server responds with the authorization URL
-    //     } else {
-    //       document.getElementById('twitter-error-message').innerText = 'Twitter connection failed: ' + response.statusText;
-    //     }
-    //   } catch (error) {
-    //     document.getElementById('twitter-error-message').innerText = 'An error occurred: ' + error.message;
-    //   }
-    // }
+        if (response.ok) {
+          const data = await response.json();
+          window.location.href = data; // Assuming the server responds with the authorization URL
+        } else {
+          document.getElementById('twitter-error-message').innerText = 'Twitter connection failed: ' + response.statusText;
+        }
+      } catch (error) {
+        document.getElementById('twitter-error-message').innerText = 'An error occurred: ' + error.message;
+      }
+    }
 
   </script>
 

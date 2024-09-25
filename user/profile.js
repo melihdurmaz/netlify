@@ -1,5 +1,4 @@
 const token = localStorage.getItem('bearerToken');
-console.log(token);
 // document.getElementById('change-password-button').addEventListener('click', function () {
 //     if (confirm('şifrenizi değiştirmek istediğinizden emin misiniz?')) {
 //         const token = localStorage.getItem('bearerToken');
@@ -54,6 +53,7 @@ document.getElementById('delete-account-button').addEventListener('click', funct
 
 document.addEventListener("DOMContentLoaded", function () {
     const token = localStorage.getItem('bearerToken');
+    console.log("token");
     if (!token) {
         alert('Lütfen giriş yapın.');
         window.location.href = '/index.html'; // Login sayfasına yönlendir
@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function fetchProfileData(token) {
-        fetch('http://127.0.0.1:8000/user/profile', {
+        fetch('http://127.0.0.1:8000/user/me', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -71,6 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
         })
             .then(response => response.json())
             .then(data => {
+                console.log(data);
                 const twitterSpan = document.getElementById('twitter');
                 const disconnectButton = document.getElementById('disconnect-twitter');
                 const connectButton = document.getElementById('connect-twitter');

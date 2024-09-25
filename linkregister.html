@@ -32,7 +32,7 @@
                     .then(response => response.json())
                     .then(data => {
                         localStorage.setItem('bearerToken', data);
-                        window.location.href = '/anasayfa.html';
+                        window.location.href = '/user/anasayfa.html';
                     });
 
                 if (!response.ok) {
