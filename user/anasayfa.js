@@ -30,17 +30,17 @@ function parseJwt(token) {
 function load() {
     const token = localStorage.getItem('bearerToken');
     if (token) {
-        fetch(`http://127.0.0.1:8000/user/check-verified`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-            }
-        })
-            .then(response => response.json())
-            .then(data => {
-                const container = document.getElementById('verification-container');
-                if (data == false) {
-                    alert('Hesabınız onaylanmamıştır. Lütfen onaylayınız.');
+        // fetch(`http://127.0.0.1:8000/user/check-verified`, {
+        //     method: 'GET',
+        //     headers: {
+        //         'Authorization': `Bearer ${token}`,
+        //     }
+        // })
+            // .then(response => response.json())
+            // .then(data => {
+                // const container = document.getElementById('verification-container');
+                // if (data == false) {
+                //     alert('Hesabınız onaylanmamıştır. Lütfen onaylayınız.');
                     const verifyButton = document.createElement('button');
                     verifyButton.textContent = 'Verifiy Et';
                     verifyButton.className = 'verification-button'; // CSS sınıfı eklenir
@@ -65,14 +65,14 @@ function load() {
                     // Daha önce eklenmiş olabilecek butonları temizle
                     container.innerHTML = '';
                     container.appendChild(verifyButton);
-                }
-                else {
-                    alert('Hesabınız onaylanmıştır.');
-                }
-            })
-            .catch(error => {
-                console.error('Davet kabul edilirken bir hata oluştu:', error);
-            });
+            //     }
+            //     else {
+            //         alert('Hesabınız onaylanmıştır.');
+            //     }
+            // // })
+            // .catch(error => {
+            //     console.error('Davet kabul edilirken bir hata oluştu:', error);
+            // });
 
         fetch('http://127.0.0.1:8000/user/profile', {
             method: 'GET',
